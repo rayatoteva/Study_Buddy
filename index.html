@@ -11,54 +11,73 @@
     <header>
         <h1> Study Buddy </h1>
         <nav class="nav">
-            <a href="#Home" class="active"> Home</a>
-            <a href="#Forum">Forum</a>
-            <a href="#Search">Search</a>
-            <a href="#Profile">Profile</a>
+            <a href="index.html" id="homeLink" data-page="Home" class="active">Home</a>
+            <a href="forum.html" id="forumLink" data-page="Forum">Forum</a>
+            <a href="index.html#Search" id="searchLink" data-page="Search">Search</a>
+            <a href="index.html#Profile" id="profileLink" data-page="Profile">Profile</a>
         </nav>
         <button type="button" id="SignUp">Sign Up</button>
     </header>
     <main>
-        <section class="statistics">
-            <div class=" statistics-item points">
-                <h4> Your points </h4>
-                <p> 5 </p>
-            </div>
-            <div class="statistics-item rating">
-                <h4> Your rating </h4>
-                <p> No ratings yet </p>
-            </div>
-            <div class="statistics-item subjects">
-                <h4> Subjects </h4>
-                <p> 7 </p>
-            </div>
-            <div class="statistics-item students">
-                <h4> Students </h4>
-                <p> 3 </p>
+        <section id="Home">
+            <section class="statistics">
+                <div class=" statistics-item points">
+                    <h4> Your points </h4>
+                    <p> 5 </p>
+                </div>
+                <div class="statistics-item rating">
+                    <h4> Your rating </h4>
+                    <p> No ratings yet </p>
+                </div>
+                <div class="statistics-item subjects">
+                    <h4> Subjects </h4>
+                    <p> 7 </p>
+                </div>
+                <div class="statistics-item students">
+                    <h4> Students </h4>
+                    <p> 3 </p>
+                </div>
+            </section>
+
+            <section class="col-2">
+                <div class="col-2-item your_subjects">
+                    <span class="card-header">
+                        <h3> Your Subjects </h3>
+                        <a href="index.html#Profile"> Edit </a>
+                    </span>
+                    <p class="help"> Need help with</p>
+                    <span class="subjects">
+                        <p class="subject-item uvod"> Uvod v programiraneto </p>
+                        <p class="subject-item bel"> Bulgarski ezik </p>
+                        <p class="subject-item math"> Matematika </p>
+                        <p class="subject-item geo"> Geografiya i ikonomika </p>
+                    </span>
+                </div>
+                <div class="col-2-item top_helpers">
+                    <h3> Top Helpers </h3>
+                    <p> No helpers yet </p>
+                </div>
+            </section>
+            <div class="recent_activity">
+                <span class="recent_header">
+                    <h3> Recent activity </h3>
+                    <a href="forum.html"> View all </a>
+                </span>
+
+                <span>
+                    <span>
+                        <h3> Can someone help with programming? </h3>
+                        <p> 0 replies </p>
+                    </span>
+                    <p> raya.l.toteva.2025 </p>
+                    <p> Uvod v programiraneto </p>
+                    <p> 8 </p>
+                    <p> question </p>
+                </span>
             </div>
         </section>
-
-        <section class="col-2">
-            <div class="col-2-item your_subjects">
-                <span class="card-header">
-                    <h3> Your Subjects </h3>
-                    <a href="#Profile"> Edit </a>
-                </span>
-                <p class="help"> Need help with</p>
-                <span class="subjects">
-                    <p class="subject-item uvod"> Uvod v programiraneto </p>
-                    <p class="subject-item bel"> Bulgarski ezik </p>
-                    <p class="subject-item math"> Matematika </p>
-                
-                </span>
-            </div>
-            <div class="col-2-item top_helpers">
-                <h3> Top Helpers </h3>
-                <p> No helpers yet </p>
-            </div>
-        </section>
-
     </main>
+    <script src="script.js"></script>
 </body>
 
 </html>
