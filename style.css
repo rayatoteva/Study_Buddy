@@ -193,10 +193,20 @@ span.subjects {
 }
 
 .subject-item {
+    display: inline-block; 
     padding: 10px 16px;
     border-radius: 20px;
     border: 2px solid transparent;
-    margin: 10px 0px 0px 0px;
+    margin: 5px;         
+    text-decoration: none; 
+    color: #333;           
+    cursor: pointer;       
+    transition: 0.2s;      
+}
+
+.subject-item:hover {
+    filter: brightness(0.9);
+    transform: translateY(-2px);
 }
 
 .subject-item.uvod {
@@ -407,7 +417,6 @@ h2.banner {
     border-radius: 1rem;
 }
 
-/* Forum.html */
 .card-forum {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
