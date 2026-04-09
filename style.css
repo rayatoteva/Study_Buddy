@@ -458,7 +458,7 @@ h2.banner {
 .hist {
     background-color: rgb(255 242 225);
     border: 1px lightgray solid;
-    border-radius: 1rem;
+    border-radius: 1rem;                      
     padding: 0rem 1rem 0rem 2rem;
     margin-left: 0;
     background: linear-gradient(90deg,

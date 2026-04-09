@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Study Buddy</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+
+<body>
+    <header>
+        <h1> Study Buddy </h1>
+        <nav class="nav">
+            <a href="/">Home</a>
+            <a href="/forum">Forum</a>
+            <a href="/profile">Profile</a>
+            <a href="/chat">Chat</a>
+        </nav>
+
+        {% if session.get('username') %}
+            <a href="/logout" style="text-decoration: none;">
+                <button type="button" id="SignUp">Log Out</button>
+            </a>
+        {% else %}
+            <a href="/auth" style="text-decoration: none;">
+                <button type="button" id="SignUp">Sign Up</button>
+            </a>
+        {% endif %}
+    </header>
+
+    <main>
+        <h2 style="text-align: center; margin-top: 50px;">chatroom coming soon</h2>
+    </main>
+</body>
+</html>
