@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__, 
             template_folder='.', 
@@ -8,6 +9,7 @@ app = Flask(__name__,
             root_path=os.getcwd())
 
 app.secret_key = "study_buddy_student_project_key"
+socketio = SocketIO(app)
 
 def get_users():
     users = {}
@@ -65,14 +67,18 @@ def logout():
     session.pop("username", None)
     return redirect(url_for("index"))
 
-if __name__ == "__main__":   
-    app.run(debug=True)
-
-@app.route("/logout")
-def logout():
-    session.pop("username", None) 
-    return redirect(url_for("index"))
-
 @app.route("/chat")
 def chat():
-    return render_template("chat.html")  
+    if "username" not in session:
+        return redirect(url_for("auth"))
+    return render_template("chat.html")
+
+@socketio.on('send_message')
+def handle_message(data):
+    username = session.get('username', 'Guest')
+    msg = data.get('message')
+    
+    emit('receive_message', {'username': username, 'message': msg}, broadcast=True)
+
+if __name__ == "__main__":
+    socketio.run(app, debug=True)

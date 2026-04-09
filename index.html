@@ -16,7 +16,6 @@
             <a href="/profile">Profile</a>
             <a href="/chat">Chat</a>
         </nav>
-
         {% if session.get('username') %}
             <a href="/logout" style="text-decoration: none;">
                 <button type="button" id="SignUp">Log Out</button>
@@ -25,8 +24,7 @@
             <a href="/auth" style="text-decoration: none;">
                 <button type="button" id="SignUp">Sign Up</button>
             </a>
-        {% endif %}
-    </header>
+        {% endif %} </header>
     
     <main>
         <section id="Home">
