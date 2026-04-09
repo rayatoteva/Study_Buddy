@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Buddy - Profile</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+<body>
+    <header>
+        <h1>Study Buddy</h1>
+        <nav class="nav">
+            <a href="/">Home</a>
+            <a href="/forum">Forum</a>
+            <a href="/profile">Profile</a>
+        </nav>
+
+        {% if session.get('username') %}
+            <a href="/logout" style="text-decoration: none;">
+                <button type="button" id="SignUp">Log Out</button>
+            </a>
+        {% else %}
+            <a href="/auth" style="text-decoration: none;">
+                <button type="button" id="SignUp">Sign Up</button>
+            </a>
+        {% endif %}
+    </header>
+
+    <main>
+        <section class="gradient-box" style="text-align: center; padding: 50px 20px;">
+            <div style="background: white; 
+                        width: 100px; height: 100px; 
+                        border-radius: 50%; 
+                        margin: 0 auto 20px; 
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
+                        font-size: 50px; 
+                        box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                
+            </div>
+            
+            <h2 class="banner">Student Profile</h2>
+            <h3 class="banner" style="font-size: 1.5em;">{{ session.get('username', 'Guest') }}</h3>
+            <p class="banner">Ready to continue your learning journey?</p>
+        </section>
+
+        <section class="statistics" style="margin-top: 30px; 
+                                          display: flex; 
+                                          justify-content: center; 
+                                          gap: 20px; 
+                                          padding: 0 20px;">
+            <div class="statistics-item" style="flex: 1; 
+                                         max-width: 300px;">
+                <h4>Learning Rank</h4>
+                <p style="font-size: 1.2em; 
+                          color: #6a11cb; 
+                          font-weight: bold;">New Buddy</p>
+            </div>
+            <div class="statistics-item" style="flex: 1; max-width: 300px;">
+                <h4>Badges Earned</h4>
+                <p style="font-size: 1.2em; 
+                         color: #2575fc; 
+                         font-weight: bold;">0</p>
+            </div>
+        </section>
+
+        <section style="max-width: 620px; 
+                        margin: 30px auto; 
+                        padding: 20px; 
+                        background: white; 
+                        border-radius: 12px; 
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <h4 style="margin-bottom: 15px; 
+                      color: #333;">Account Settings</h4>
+            <ul style="list-style: none; padding: 0;">
+                <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><strong>Username:</strong> {{ session.get('username', 'N/A') }}</li>
+                <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><strong>Account Status:</strong> Active</li>
+                <li style="padding: 10px 0;"><strong>Join Date:</strong> April 2026</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer style="margin-top: 50px; text-align: center; color: #777;">
+        <p>&copy; 2026 Study Buddy Project</p>
+    </footer>
+</body>
+</html>

@@ -514,3 +514,24 @@ h2.banner {
     row-gap: 10px;
     cursor: pointer;
 }
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5%;
+}
+
+header > a {
+    text-decoration: none;
+}
+
+#SignUp {
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s;
+}
+
+#SignUp:hover {
+    transform: scale(1.05);
+}

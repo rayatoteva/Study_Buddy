@@ -11,19 +11,26 @@
     <header>
         <h1> Study Buddy </h1>
         <nav class="nav">
-            <a href="/" id="homeLink" data-page="Home">Home</a>
-            <a href="/forum" id="forumLink" data-page="Forum">Forum</a>
-            <a href="/#Search" id="searchLink" data-page="Search">Search</a>
-            <a href="/#Profile" id="profileLink" data-page="Profile">Profile</a>
+            <a href="/">Home</a>
+            <a href="/forum">Forum</a>
+            <a href="/profile">Profile</a>
         </nav>
-        <a href="/auth" style="text-decoration: none;">
-            <button type="button" id="SignUp">Sign Up</button>
-        </a>
+
+        {% if session.get('username') %}
+            <a href="/logout" style="text-decoration: none;">
+                <button type="button" id="SignUp">Log Out</button>
+            </a>
+        {% else %}
+            <a href="/auth" style="text-decoration: none;">
+                <button type="button" id="SignUp">Sign Up</button>
+            </a>
+        {% endif %}
     </header>
+    
     <main>
         <section id="Home">
             <div class="gradient-box">
-                <h2 class="banner"> Hey, Raya Toteva!</h2>
+                <h2 class="banner"> Hey, {{ session.get('username', 'Guest') }}!</h2>
                 <p class="banner"> Ready to learn something new today? Connect with other <br> students, ask questions, or help someone out! </p> 
                 <span class="banner-buttons">
                     <a href="/forum" id="forumLink" class="active"> Browse forum </a>
