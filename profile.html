@@ -6,29 +6,30 @@
     <title>Study Buddy - Profile</title>
     <link rel="stylesheet" type="text/css" href="/style.css">
 </head>
-<body>
-    <header>
-        <h1>Study Buddy</h1>
+<body style="background-color: #f4f7f6; font-family: sans-serif; margin: 0;">
+
+    <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 5%; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <h1 style="margin: 0;">Study Buddy</h1>
         <nav class="nav">
-            <a href="/">Home</a>
-            <a href="/forum">Forum</a>
-            <a href="/profile">Profile</a>
-            <a href="/chat">Chat</a>
+            <a href="/" style="margin-right: 15px; text-decoration: none; color: #333;">Home</a>
+            <a href="/forum" style="margin-right: 15px; text-decoration: none; color: #333;">Forum</a>
+            <a href="/profile" style="margin-right: 15px; text-decoration: none; color: #6a11cb; font-weight: bold;">Profile</a>
+            <a href="/chat" style="text-decoration: none; color: #333;">Chat</a>
         </nav>
 
         {% if session.get('username') %}
             <a href="/logout" style="text-decoration: none;">
-                <button type="button" id="SignUp">Log Out</button>
+                <button type="button" id="SignUp" style="background: #ff6b6b; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer;">Log Out</button>
             </a>
         {% else %}
             <a href="/auth" style="text-decoration: none;">
-                <button type="button" id="SignUp">Sign Up</button>
+                <button type="button" id="SignUp" style="background: #6a11cb; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer;">Sign Up</button>
             </a>
         {% endif %}
     </header>
 
     <main>
-        <section class="gradient-box" style="text-align: center; padding: 50px 20px;">
+        <section class="gradient-box" style="text-align: center; padding: 50px 20px; background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white;">
             <div style="background: white; 
                         width: 100px; height: 100px; 
                         border-radius: 50%; 
@@ -37,52 +38,62 @@
                         align-items: center; 
                         justify-content: center; 
                         font-size: 50px; 
-                        box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                
+                        color: #6a11cb;
+                        font-weight: bold;
+                        box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+                {{ session.get('username', 'G')[0].upper() }}
             </div>
             
-            <h2 class="banner">Student Profile</h2>
-            <h3 class="banner" style="font-size: 1.5em;">{{ session.get('username', 'Guest') }}</h3>
-            <p class="banner">Ready to continue your learning journey?</p>
+            <h2 style="margin: 10px 0; font-size: 2em;">Student Profile</h2>
+            <h3 style="margin: 5px 0; font-size: 1.5em; opacity: 0.9;">{{ session.get('username', 'Guest') }}</h3>
+            <p style="opacity: 0.8;">Ready to continue your learning journey?</p>
         </section>
 
-        <section class="statistics" style="margin-top: 30px; 
+        <section class="statistics" style="margin-top: -30px; 
                                           display: flex; 
                                           justify-content: center; 
                                           gap: 20px; 
                                           padding: 0 20px;">
-            <div class="statistics-item" style="flex: 1; 
-                                         max-width: 300px;">
-                <h4>Learning Rank</h4>
-                <p style="font-size: 1.2em; 
-                          color: #6a11cb; 
-                          font-weight: bold;">New Buddy</p>
+            <div class="statistics-item" style="flex: 1; max-width: 250px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;">
+                <h4 style="margin: 0; color: #777; font-size: 0.9em; text-transform: uppercase;">Learning Rank</h4>
+                <p style="font-size: 1.2em; color: #6a11cb; font-weight: bold; margin: 10px 0 0;">New Buddy</p>
             </div>
-            <div class="statistics-item" style="flex: 1; max-width: 300px;">
-                <h4>Badges Earned</h4>
-                <p style="font-size: 1.2em; 
-                         color: #2575fc; 
-                         font-weight: bold;">0</p>
+            <div class="statistics-item" style="flex: 1; max-width: 250px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;">
+                <h4 style="margin: 0; color: #777; font-size: 0.9em; text-transform: uppercase;">Badges Earned</h4>
+                <p style="font-size: 1.2em; color: #2575fc; font-weight: bold; margin: 10px 0 0;">0</p>
             </div>
         </section>
 
-        <section style="max-width: 620px; 
-                        margin: 30px auto; 
-                        padding: 20px; 
+        <section style="max-width: 540px; 
+                        margin: 40px auto; 
+                        padding: 30px; 
                         background: white; 
-                        border-radius: 12px; 
-                        box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-            <h4 style="margin-bottom: 15px; 
-                      color: #333;">Account Settings</h4>
-            <ul style="list-style: none; padding: 0;">
-                <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><strong>Username:</strong> {{ session.get('username', 'N/A') }}</li>
-                <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><strong>Account Status:</strong> Active</li>
-                <li style="padding: 10px 0;"><strong>Join Date:</strong> April 2026</li>
+                        border-radius: 15px; 
+                        box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 20px; color: #333; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px;">Account Settings</h4>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="padding: 12px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                    <span style="color: #666;">Username</span>
+                    <strong>{{ session.get('username', 'N/A') }}</strong>
+                </li>
+                <li style="padding: 12px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                    <span style="color: #666;">Account Status</span>
+                    <span style="color: #28a745; font-weight: bold;">● Active</span>
+                </li>
+                <li style="padding: 12px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                    <span style="color: #666;">Join Date</span>
+                    <strong>April 2026</strong>
+                </li>
+                <li style="padding: 20px 0 0; text-align: center;">
+                    <a href="/chat" style="display: inline-block; padding: 10px 20px; background: #f0e6ff; color: #6a11cb; text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.3s;">
+                        Go to Student Chat →
+                    </a>
+                </li>
             </ul>
         </section>
     </main>
 
-    <footer style="margin-top: 50px; text-align: center; color: #777;">
+    <footer style="margin: 50px 0 30px; text-align: center; color: #aaa; font-size: 0.9em;">
         <p>&copy; 2026 Study Buddy Project</p>
     </footer>
 </body>
