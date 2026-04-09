@@ -3,20 +3,22 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Study Buddy Forum</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Study Buddy</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
 </head>
 
 <body>
-    <header>
+    <header> 
         <h1> Study Buddy </h1>
         <nav class="nav">
-            <a href="index.html" id="homeLink" data-page="Home">Home</a>
-            <a href="forum.html" id="forumLink" data-page="Forum" class="active">Forum</a>
-            <a href="index.html#Search" id="searchLink" data-page="Search">Search</a>
-            <a href="index.html#Profile" id="profileLink" data-page="Profile">Profile</a>
+            <a href="/" id="homeLink" data-page="Home">Home</a>
+            <a href="/forum" id="forumLink" data-page="Forum">Forum</a>
+            <a href="/#Search" id="searchLink" data-page="Search">Search</a>
+            <a href="/#Profile" id="profileLink" data-page="Profile">Profile</a>
         </nav>
-        <button type="button" id="SignUp">Sign Up</button>
+        <a href="/auth" style="text-decoration: none;">
+            <button type="button" id="SignUp">Sign Up</button>
+        </a>
     </header>
     <main>
         <section class="card-forum">
@@ -66,7 +68,7 @@
             </div>
         </section>
     </main>
-    <script src="script.js"></script>
+    <script src="/script.js"></script>
 </body>
 
 </html>
