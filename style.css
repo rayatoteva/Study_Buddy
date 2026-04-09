@@ -1,6 +1,7 @@
 main {
     padding-top: 1rem;
     background-color: rgb(250 248 245);
+    padding-bottom: 5rem;
 }
 
 .hidden {
@@ -408,6 +409,63 @@ h2.banner {
 }
 
 /* Forum.html */
+.search-box {
+    position: relative;
+    margin: 10px 94px 25px;
+}
+
+.search-box input {
+    width: 100%;
+    height: 52px;
+    padding: 0 20px 0 52px;
+    border: 1px solid lightgray;
+    border-radius: 16px;
+    font-size: 16px;
+    color: #7c6d5d;
+    outline: none;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.search-box input::placeholder {
+    color: #8c7d6f;
+}
+
+.search-box input:focus {
+    border-color: #3f7d52;
+}
+
+.search-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+    color: #8c7d6f;
+    pointer-events: none;
+}
+
+.forum-inro {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0rem 1rem 7rem;
+    row-gap: 8px;
+}
+
+h1.forum-intro-item{
+    padding:0;
+    margin:0;
+    font-size: 30px;
+    font-family: sans-serif;
+}
+
+p.forum-intro-item{
+    margin: 0;
+    color: gray;
+    font-size: 18px;
+}
+
 .card-forum {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -505,3 +563,118 @@ h2.banner {
     row-gap: 10px;
     cursor: pointer;
 }
+
+
+/* Search.html */
+.search-card {
+    background-color: white;
+    padding: 2rem 2rem;
+    border-radius: 1rem;
+    border: 1px solid lightgray;
+    margin-bottom: 1.5rem;
+}
+
+.search-card-body {
+    margin-top: 1rem;
+}
+
+.search-intro {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0rem 1rem 7rem;
+    row-gap: 8px;
+}
+
+h1.search-intro-item{
+    padding:0;
+    margin:0;
+    font-size: 30px;
+    font-family: sans-serif;
+}
+
+p.search-intro-item {
+    margin: 0;
+    color: gray;
+    font-size: 18px;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size:25px;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+    margin-right: 13px;
+    margin-top: 7px;
+}
+
+.avatar-k {
+    background: linear-gradient(135deg, #63dfd3, #2fd4c8);
+}
+
+.avatar-r {
+    background: linear-gradient(135deg, #8fc0ff, #5f9ef3);
+}
+
+.avatar-e{
+    background: linear-gradient(135deg, #b18fff, #8362f3);
+}
+
+.search-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 1.5rem;
+    max-width: 1200px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.search-card-header {
+    display: flex;
+}
+
+.search-cards a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+span.search-header-pf {
+    background-color: lightyellow;
+    padding: 3px 18px;
+    border: 1px solid lightgray;
+    border-radius: 14px;
+    margin-left: 5px;
+}
+
+.search-cards p {
+    margin: 4px 0px 5px;
+    color: #c1bebe;
+    font-size: 13px;
+}
+
+span.nivo {
+    border: 1px solid lightgray;
+    padding: 3px 10px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-family: sans-serif;
+}
+
+.button {
+    padding: 6px 18px;
+    border-radius: 12px;
+    border: 1px solid lightgray;
+    background-color: #f3f3f3;
+    margin-right: 7px;
+}
+
+.button:hover {
+    background-color: rgb(205, 203, 203);
+}
+
