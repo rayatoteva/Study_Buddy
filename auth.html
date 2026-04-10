@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Study Buddy - Login</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+<body>
+    <header>
+        <h1>Study Buddy</h1>
+        <nav class="nav">
+            <a href="/">Home</a>
+            <a href="/forum">Forum</a>
+        </nav>
+    </header>
+
+    <main style="display: flex; 
+                justify-content: center; 
+                align-items: center; 
+                min-height: 80vh;">
+        <div class="gradient-box" style="width: 100%; 
+                    max-width: 400px; 
+                    padding: 40px; 
+                    text-align: center;">
+            <h2 id="title" class="banner">Sign Up</h2>
+            
+            <form method="POST" action="/auth" style="margin-top: 20px;">
+                <input type="text" name="username" placeholder="Username" required 
+                       style="display:block; 
+                       width:100%; 
+                       margin-bottom:15px; 
+                       padding:12px; 
+                       border-radius:8px; 
+                       border:1px solid #ccc;">
+                
+                <input type="password" name="password" placeholder="Password" required 
+                       style="display:block; 
+                       width:100%; 
+                       margin-bottom:20px; 
+                       padding:12px; 
+                       border-radius:8px; 
+                       border:1px solid #ccc;">
+                
+                <input type="hidden" name="action" id="action" value="register">
+                
+                <button type="submit" id="SignUp" style="width: 100%; cursor: pointer;">Submit</button>
+            </form>
+
+            <p id="toggleText" style="margin-top:20px; 
+                                    color: #555; 
+                                    cursor: pointer; 
+                                    font-size: 0.9em;">
+                Already have an account? <span style="color: #6a11cb; font-weight: bold;">Login here</span>
+            </p>
+        </div>
+    </main>
+
+    <script>
+        const toggleBtn = document.getElementById('toggleText');
+        const actionInput = document.getElementById('action');
+        const titleText = document.getElementById('title');
+        const submitBtn = document.getElementById('SignUp');
+
+        toggleBtn.onclick = function() {
+            if (actionInput.value === 'register') {
+                actionInput.value = 'login';
+                titleText.innerText = 'Login';
+                submitBtn.innerText = 'Login';
+                this.innerHTML = 'Need an account? <span style="color: #6a11cb; font-weight: bold;">Sign Up here</span>';
+            } else {
+                actionInput.value = 'register';
+                titleText.innerText = 'Sign Up';
+                submitBtn.innerText = 'Submit';
+                this.innerHTML = 'Already have an account? <span style="color: #6a11cb; font-weight: bold;">Login here</span>';
+            }
+        };
+    </script>
+</body>
+</html>

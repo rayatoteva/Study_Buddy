@@ -3,20 +3,29 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Study Buddy Forum</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Study Buddy</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
 </head>
 
 <body>
-    <header>
+    <header> 
         <h1> Study Buddy </h1>
         <nav class="nav">
-            <a href="index.html" id="homeLink" data-page="Home">Home</a>
-            <a href="forum.html" id="forumLink" data-page="Forum" class="active">Forum</a>
-            <a href="index.html#Search" id="searchLink" data-page="Search">Search</a>
-            <a href="index.html#Profile" id="profileLink" data-page="Profile">Profile</a>
+            <a href="/">Home</a>
+            <a href="/forum">Forum</a>
+            <a href="/profile">Profile</a>
+            <a href="/chat">Chat</a>
         </nav>
-        <button type="button" id="SignUp">Sign Up</button>
+
+        {% if session.get('username') %}
+            <a href="/logout" style="text-decoration: none;">
+                <button type="button" id="SignUp">Log Out</button>
+            </a>
+        {% else %}
+            <a href="/auth" style="text-decoration: none;">
+                <button type="button" id="SignUp">Sign Up</button>
+            </a>
+        {% endif %}
     </header>
     <main>
         <section class="card-forum">
@@ -40,6 +49,7 @@
                     <h3> English </h3>
                     <button type="button"> Add a grade </button>
                 </div>
+                
                 <span> CLASSES </span>
                 <div class="grades">
                     <a href=""> 8th grade </a>
@@ -65,7 +75,7 @@
             </div>
         </section>
     </main>
-    <script src="script.js"></script>
+    <script src="/script.js"></script>
 </body>
 
 </html>

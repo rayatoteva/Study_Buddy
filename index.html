@@ -4,35 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Study Buddy</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" type="text/css" href="/style.css">
 </head>
 
 <body>
-    <header>
-        <h1> Study Buddy </h1>
-        <nav class="nav">
-            <a href="index.html" id="homeLink" data-page="Home" class="active">Home</a>
-            <a href="#Forum" id="forumLink" data-page="Forum">Forum</a>
-            <a href="#Search" id="searchLink" data-page="Search">Search</a>
-            <a href="#Profile" id="profileLink" data-page="Profile">Profile</a>
-        </nav>
-        <button type="button" id="SignUp">Sign Up</button>
-    </header>
+<header>
+    <h1> Study Buddy </h1>
+    <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/forum">Forum</a>
+        <a href="/profile">Profile</a>
+        <a href="/chat">Chat</a>
+    </nav>
+    {% if session.get('username') %}
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span style="font-weight: bold; color: #6a11cb;">⭐ <span id="pts-header">{{ points }}</span> pts</span>
+            
+            <a href="/logout" style="text-decoration: none;">
+                <button type="button" id="SignUp">Log Out</button>
+            </a>
+        </div>
+    {% else %}
+        <a href="/auth" style="text-decoration: none;">
+            <button type="button" id="SignUp">Sign Up</button>
+        </a>
+    {% endif %}
+</header>
+    
     <main>
         <section id="Home">
             <div class="gradient-box">
-                <h2 class="banner"> Hey, Raya Toteva! </h2>
-                <p class="banner"> Ready to learn something new today? Connect with other <br> students, ask questions,
-                    or help someone out! </p>
+                <h2 class="banner"> Hey, {{ session.get('username', 'Guest') }}!</h2>
+                <p class="banner"> Ready to learn something new today? Connect with other <br> students, ask questions, or help someone out! </p> 
                 <span class="banner-buttons">
-                    <a href="forum.html" id="forumLink" class="active"> Browse forum </a>
-                    <a href="search.html" id="searchLink"> Find students </a>
+                    <a href="/forum" id="forumLink" class="active"> Browse forum </a>
+                    <a href="/#Search" id="searchLink"> Find students </a>
                 </span>
             </div>
             <section class="statistics">
                 <div class=" statistics-item points">
                     <h4> Your points </h4>
-                    <p> 5 </p>
+                    <p id="pts-num"> {{ points }} </p>
                 </div>
                 <div class="statistics-item rating">
                     <h4> Your rating </h4>
@@ -50,18 +62,19 @@
 
             <section class="col-2">
                 <div class="col-2-item your_subjects">
-                    <span class="card-header">
-                        <h3> Your Subjects </h3>
-                        <a href="index.html#Profile"> Edit </a>
-                    </span>
-                    <p class="help"> Need help with</p>
-                    <span class="subjects">
-                        <p class="subject-item uvod"> Uvod v programiraneto </p>
-                        <p class="subject-item bel"> Bulgarski ezik </p>
-                        <p class="subject-item math"> Matematika </p>
-                        <p class="subject-item geo"> Geografiya i ikonomika </p>
-                    </span>
-                </div>
+    <div class="card-header">
+        <h3>Your Subjects</h3>
+        <a href="#">View all</a>
+    </div>
+    <p class="help">Click a subject to see your progress</p>
+    
+    <span class="subjects">
+        <a href="math-page.html" class="subject-item math">Mathematika</a>
+        <a href="english-page.html" class="subject-item bel">English</a>
+        <a href="history-page.html" class="subject-item uvod">History</a>
+        <a href="geo-page.html" class="subject-item geo">Geography</a>
+    </span>
+</div>
                 <div class="col-2-item top_helpers">
                     <h3> Top Helpers </h3>
                     <p> No helpers yet </p>
@@ -88,156 +101,49 @@
                 </ul>
             </section>
             <div class="gradient-box">
-                <h2>How Points Work</h2>
-                <section class="point">
-                    <div class="point-item ask_question">
-                        <h3> Ask a question </h3>
-                        <p> Costs 1 point </p>
-                        <p class="card-bottom"> -1 point </p>
-                    </div>
-                    <div class="point-item help_someone">
-                        <h3> Help someone </h3>
-                        <p> Earn 2 points </p>
-                        <p class="card-bottom"> +2 points </p>
-                    </div>
-                    <div class="point-item get_rating">
-                        <h3> Get a good rating </h3>
-                        <p> Earn 1 bonus point </p>
-                        <p class="card-bottom"> +1 point </p>
-                    </div>
-                </section>
-            </div>
-        </section>
-        <section id="Forum" class="hidden">
-            <div class="forum-inro">
-                <h1 class="forum-intro-item"> Forum </h1>
-                <p class="forum-intro-item"> Browse subjects and join discussions </p>
-            </div>
-            <div class="search-box">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none">
-                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
-                    <path d="M20 20L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-                <input type="text" placeholder="Search subjects..." />
-            </div>
-            <section class="card-forum">
-                <div class="maths">
-                    <div class="subject_forum-header">
-                        <h3> Mathematika </h3>
-                        <button type="button"> Add a grade </button>
-                    </div>
-                    <span> CLASSES </span>
-                    <div class="grades">
-                        <a href=""> 8th grade </a>
-                        <a href=""> 9th grade </a>
-                        <a href=""> 10th grade </a>
-                        <a href=""> 11th grade </a>
-                        <a href=""> 12th grade </a>
-                    </div>
-
+            <h2>How Points Work</h2>
+            <section class="point">
+                <div class="point-item ask_question">
+                    <h3> Ask a question </h3>
+                    <p> Costs 1 point </p>
+                    <p class="card-bottom"> -1 point </p>
                 </div>
-                <div class="angl">
-                    <div class="subject_forum-header">
-                        <h3> English </h3>
-                        <button type="button"> Add a grade </button>
-                    </div>
-                    <span> CLASSES </span>
-                    <div class="grades">
-                        <a href=""> 8th grade </a>
-                        <a href=""> 9th grade </a>
-                        <a href=""> 10th grade </a>
-                        <a href=""> 11th grade </a>
-                    </div>
-
+                <div class="point-item help_someone">
+                    <h3> Help someone </h3>
+                    <p> Earn 2 points </p>
+                    <p class="card-bottom"> +2 points </p>
                 </div>
-                <div class="hist">
-                    <div class="subject_forum-header">
-                        <h3> History </h3>
-                        <button type="button"> Add a grade </button>
-                    </div>
-                    <span> CLASSES </span>
-                    <div class="grades">
-                        <a href=""> 8th grade </a>
-                        <a href=""> 9th grade </a>
-                        <a href=""> 10th grade </a>
-                        <a href=""> 11th grade </a>
-                        <a href=""> 12th grade </a>
-                    </div>
+                
+                <div class="point-item get_rating">
+                    <h3> Get a good rating </h3>
+                    <p> Earn 1 bonus point </p>
+                    <p class="card-bottom"> +1 point </p>
                 </div>
             </section>
-        </section>
-        <section id="Search" class="search-page hidden">
-            <div class="search-intro">
-                <h1 class="search-intro-item">Find students</h1>
-                <p class="search-intro-item">Search by name, subject, or school</p>
-            </div>
-            <div class="search-box">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none">
-                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
-                    <path d="M20 20L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-                <input type="text" placeholder="Search subjects..." />
-            </div>
-            <div class="search-cards">
-                <div class="search-card">
-                    <div class="search-card-header">
-                        <div class="avatar avatar-k"> K </div>
-                        <div class="search-header-info">
-                            <div>
-                                <a href="#Profile"> Kai </a>
-                                <span class="search-header-pf"> 5.0 </span>
-                            </div>
-                            <p> Student </p>
-                            <span class="nivo"> Novice </span>
-                        </div>
-                    </div>
-                    <div class="search-card-body">
-                        <button class="button"> Sent friend request </button>
-                        <button class="button"> Rate </button>
-                    </div>
-                </div>
-
-                <div class="search-card">
-                    <div class="search-card-header">
-                        <div class="avatar avatar-r"> R </div>
-                        <div class="search-header-info">
-                            <div>
-                                <a href="#Profile"> Raya </a>
-                                <span class="search-header-pf"> 5.0 </span>
-                            </div>
-                            <p> Student </p>
-                            <span class="nivo"> Novice </span>
-                        </div>
-                    </div>
-                    <div class="search-card-body">
-                        <button class="button"> Sent friend request </button>
-                        <button class="button"> Rate </button>
-                    </div>
-                </div>
-                <div class="search-card">
-                    <div class="search-card-header">
-                        <div class="avatar avatar-e"> E </div>
-                        <div class="search-header-info">
-                            <div>
-                                <a href="#Profile"> Eva </a>
-                                <span class="search-header-pf"> 1.0 </span>
-                            </div>
-                            <p> Student </p>
-                            <span class="nivo"> Novice </span>
-                        </div>
-                    </div>
-                    <div class="search-card-body">
-                        <button class="button"> Sent friend request </button>
-                        <button class="button"> Rate </button>
-                    </div>
-                </div>
-        </section>
-        <section id="Profile" class="hidden">
-            <h1>Profile</h1>
-            <p>Your profile page will go here.</p>
-        </section>
+        </div>
+        </section>      
     </main>
-    <script src="script.js"></script>
-</body>
+    <header>
+    <h1> Study Buddy </h1>
+    <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/forum">Forum</a>
+        <a href="/profile">Profile</a>
+        <a href="/chat">Chat</a>
+    </nav>
+    {% if session.get('username') %}
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span style="font-weight: bold; color: #6a11cb;">⭐ <span id="pts-header">{{ points }}</span> pts</span>
+            
+            <a href="/logout" style="text-decoration: none;">
+                <button type="button" id="SignUp">Log Out</button>
+            </a>
+        </div>
+    {% else %}
+        <a href="/auth" style="text-decoration: none;">
+            <button type="button" id="SignUp">Sign Up</button>
+        </a>
+    {% endif %}
+</header>
 
 </html>

@@ -194,10 +194,20 @@ span.subjects {
 }
 
 .subject-item {
+    display: inline-block; 
     padding: 10px 16px;
     border-radius: 20px;
     border: 2px solid transparent;
-    margin: 10px 0px 0px 0px;
+    margin: 5px;         
+    text-decoration: none; 
+    color: #333;           
+    cursor: pointer;       
+    transition: 0.2s;      
+}
+
+.subject-item:hover {
+    filter: brightness(0.9);
+    transform: translateY(-2px);
 }
 
 .subject-item.uvod {
@@ -372,7 +382,7 @@ h2.banner {
     margin-top: 18px;
 }
 
-.recent-information span {
+.recent-information span{
     margin-top: 0px;
     color: gray;
     font-size: small;
@@ -507,7 +517,7 @@ p.forum-intro-item{
 .hist {
     background-color: rgb(255 242 225);
     border: 1px lightgray solid;
-    border-radius: 1rem;
+    border-radius: 1rem;                      
     padding: 0rem 1rem 0rem 2rem;
     margin-left: 0;
     background: linear-gradient(90deg,
