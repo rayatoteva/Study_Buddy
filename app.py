@@ -62,6 +62,9 @@ def auth():
         username, password, action = request.form.get("username"), request.form.get("password"), request.form.get("action")
         users = get_users()
         if action == "register":
+            confirm_password = request.form.get("confirm_password")
+            if password != confirm_password:
+                return "Passwords do not match! <a href='/auth'>Try again</a>"
             if username in users: return "User exists! <a href='/auth'>Try again</a>"
             users[username] = {"pass": password, "pts": 5}
             save_users(users)
