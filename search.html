@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Study Buddy</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+
+<body>
+    <header>
+        <h1> Study Buddy </h1>
+        <nav class="nav">
+            <a href="/">Home</a>
+            <a href="/forum">Forum</a>
+            <a href="/profile">Profile</a>
+            <a href="/search" class="active">Search</a>
+            <!-- <a href="/chat">Chat</a> -->
+        </nav>
+        {% if session.get('username') %}
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span style="font-weight: bold; color: #6a11cb;">⭐ <span id="pts-header">{{ points }}</span> pts</span>
+
+            <a href="/logout" style="text-decoration: none;">
+                <button type="button" id="SignUp">Log Out</button>
+            </a>
+        </div>
+        {% else %}
+        <a href="/auth" style="text-decoration: none;">
+            <button type="button" id="SignUp">Sign Up</button>
+        </a>
+        {% endif %}
+    </header>
+    <main>
+        <section id="Search" class="search-page">
+            <div class="search-intro">
+                <h1 class="search-intro-item">Find students</h1>
+                <p class="search-intro-item">Search by name, subject, or school</p>
+            </div>
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+                    <path d="M20 20L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <input type="text" placeholder="Search people..." />
+            </div>
+            <div class="search-cards">
+                <div class="search-card">
+                    <div class="search-card-header">
+                        <div class="avatar avatar-k"> K </div>
+                        <div class="search-header-info">
+                            <div>
+                                <a href="#Profile"> Kai </a>
+                                <span class="search-header-pf"> 5.0 </span>
+                            </div>
+                            <p> Student </p>
+                            <span class="nivo"> Novice </span>
+                        </div>
+
+                    </div>
+                    <div class="search-card-body">
+                        <button class="button"> Sent friend request </button>
+                        <button class="button"> Rate </button>
+                    </div>
+                </div>
+
+                <div class="search-card">
+                    <div class="search-card-header">
+                        <div class="avatar avatar-r"> R </div>
+                        <div class="search-header-info">
+                            <div>
+                                <a href="#Profile"> Raya </a>
+                                <span class="search-header-pf"> 5.0 </span>
+                            </div>
+                            <p> Student </p>
+                            <span class="nivo"> Novice </span>
+                        </div>
+                    </div>
+                    <div class="search-card-body">
+                        <button class="button"> Sent friend request </button>
+                        <button class="button"> Rate </button>
+                    </div>
+                </div>
+                <div class="search-card">
+                    <div class="search-card-header">
+                        <div class="avatar avatar-e"> E </div>
+                        <div class="search-header-info">
+                            <div>
+                                <a href="#Profile"> Eva </a>
+                                <span class="search-header-pf"> 1.0 </span>
+                            </div>
+                            <p> Student </p>
+                            <span class="nivo"> Novice </span>
+                        </div>
+                    </div>
+                    <div class="search-card-body">
+                        <button class="button"> Sent friend request </button>
+                        <button class="button"> Rate </button>
+                    </div>
+                </div>
+        </section>
+    </main>
+
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2> Welcome to Study Buddy </h2>
+            <p class="underheader"> Sign in to continue</p>
+            <form class="form" action="/auth" method="POST">
+                <span> Email </span>
+                <input type="text" name="username" placeholder="Username" required>
+                <span> Password </span>
+                <input type="password" name="password" placeholder="Password" required>
+                <div class="modal-buttons">
+                    <button type="submit">Sign In</button>
+                </div>
+                <div class="under">
+                    <button type="button" class="inside" id="forgotPassBtn"> Forgot your password? </button>
+                    <button type="button" class="inside" id="goToRegisterBtn"> Need an account? <span>Sign up</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="passwordModal" class="modal">
+        <div class="modal-content password-content">
+            <span class="back-btn">&#8592; Back to sign up</span>
+            <h2>Reset your password</h2>
+            <p class="reset">Enter your email and we'll send you a link to reset your password</p>
+            <span> Email </span>
+            <input type="email" placeholder="you@example.com">
+            <button class="send-btn">Send reset link</button>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content login-content">
+            <span class="back-btn">&#8592; Back to sign in</span>
+            <h2>Create your account</h2>
+            <form action="/auth" method="POST">
+                <span> Email </span>
+                <input type="email" name="email" placeholder="you@example.com" required>
+                <span> Password </span>
+                <input type="password" name="password" placeholder="Min. 8 characters" required>
+                <span> Confirm Password </span>
+                <input type="password" name="confirm_password" placeholder="Re-enter password" required>
+                <button type="submit" class="send-btn">Create account</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="addSubjectModal" class="modal">
+        <div class="modal-content addsubject-content">
+            <span class="close-btn" style="float: right; position: static;"> &times; </span>
+            <h2> Add New Subject </h2>
+            <form action="/add_subject" method="POST">
+                <label>Subject Name</label>
+                <input type="text" name="subject_name" placeholder="e.g. Physics, Art History..." required>
+                <label>Class Levels</label>
+                <div class="class-input-wrapper">
+                    <input type="text" id="classLevelInput" placeholder="e.g. 9th grade">
+                    <button type="button" id="addClassBtn">+</button>
+                </div>
+
+                <div id="tagsContainer" class="tags-container"></div>
+                <div style="overflow: auto; margin-top: 20px;">
+                    <button type="submit" class="add-subject-submit">Add Subject</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

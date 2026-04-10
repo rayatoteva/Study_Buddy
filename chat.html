@@ -7,28 +7,29 @@
 </head>
 <body style="background-color: #f4f7f6; font-family: sans-serif; margin: 0;">
 
-    <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 5%; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-        <h1 style="margin: 0;">Study Buddy</h1>
-        <nav class="nav">
-            <a href="/" style="margin-right: 15px; text-decoration: none; color: #333;">Home</a>
-            <a href="/forum" style="margin-right: 15px; text-decoration: none; color: #333;">Forum</a>
-            <a href="/profile" style="margin-right: 15px; text-decoration: none; color: #333;">Profile</a>
-            <a href="/chat" style="text-decoration: none; color: #ff6b6b; font-weight: bold;">Chat</a>
-        </nav>
-
-        {% if session.get('username') %}
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <span style="font-weight: bold; color: #6a11cb;">⭐ <span id="pts-num">{{ points }}</span> pts</span>
-                <a href="/logout" style="text-decoration: none;">
-                    <button type="button" style="background: #ff6b6b; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer;">Log Out</button>
-                </a>
-            </div>
-        {% else %}
-            <a href="/auth" style="text-decoration: none;">
-                <button type="button" style="background: #ff6b6b; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer;">Sign Up</button>
+    <header>
+    <h1> Study Buddy </h1>
+    <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/forum">Forum</a>
+        <a href="/profile">Profile</a>
+        <a href="/search">Search</a>
+        <a href="/chat" class="active">Chat</a>
+    </nav>
+    {% if session.get('username') %}
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span style="font-weight: bold; color: #6a11cb;">⭐ <span id="pts-header">{{ points }}</span> pts</span>
+            
+            <a href="/logout" style="text-decoration: none;">
+                <button type="button" id="SignUp">Log Out</button>
             </a>
-        {% endif %}
-    </header>
+        </div>
+    {% else %}
+        <a href="/auth" style="text-decoration: none;">
+            <button type="button" id="SignUp">Sign Up</button>
+        </a>
+    {% endif %}
+</header>
 
     <main style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
         <div id="chat-container" style="background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden;">

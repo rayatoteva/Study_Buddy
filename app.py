@@ -44,6 +44,18 @@ def chat():
     pts = users.get(session['username'], {}).get('pts', 5)
     return render_template("chat.html", points=pts)
 
+@app.route("/forum")
+def forum():
+    return render_template("forum.html")
+
+@app.route("/profile")
+def profile():
+    return render_template("profile.html")
+
+@app.route("/search")
+def search():
+    return render_template("search.html")    
+
 @app.route("/auth", methods=["GET", "POST"])
 def auth():
     if request.method == "POST":
