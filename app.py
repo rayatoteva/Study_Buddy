@@ -16,9 +16,12 @@ def get_users():
     try:
         with open("users.txt", "r") as f:
             for line in f:
-                if "," in line:
-                    u, p = line.strip().split(",")
-                    users[u] = p
+                parts = line.strip().split(",")
+                if len(parts) >= 2:
+                    u = parts[0]
+                    p = parts[1]
+                    pts = int(parts[2]) if len(parts) > 2 else 5
+                    users[u] = {"password": p, "points": pts}
     except FileNotFoundError:
         pass
     return users
