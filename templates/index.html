@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Study Buddy - Home Page</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+</head>
+
+<body>
+    <header>
+        <h1> Study Buddy </h1>
+        <nav class="nav">
+            <a href="/" data-page="home" class="active">Home</a>
+            <a href="/forum" data-page="forum">Forum</a>
+            <a href="/profile" data-page="profile">Profile</a>
+            <a href="/search" data-page="search">Search</a>
+        </nav>
+        {% if session.get('username') %}
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span style="font-weight: bold; color: #6a11cb;">⭐ <span id="pts-header">{{ points }}</span> pts</span>
+
+            <a href="/logout" style="text-decoration: none;">
+                <button type="button" id="SignUp">Log Out</button>
+            </a>
+        </div>
+        {% else %}
+        <a href="/auth" data-page="auth" style="text-decoration: none;">
+            <button type="button" id="SignUp">Sign Up</button>
+        </a>
+        {% endif %}
+    </header>
+
+    <main>
+        <section id="Home" class="page-section ">
+            <div class="gradient-box">
+                <h2 class="banner"> Hey, {{ session.get('username', 'Guest') }}!</h2>
+                <p class="banner"> Ready to learn something new today? Connect with other <br> students, ask questions,
+                    or help someone out! </p>
+                <span class="banner-buttons">
+                    <a href="/forum" id="forumLink" class="active"> Browse forum </a>
+                    <a href="/#Search" id="searchLink"> Find students </a>
+                </span>
+            </div>
+            <section class="statistics">
+                <div class=" statistics-item points">
+                    <h4> Your points </h4>
+                    <p id="pts-num"> {{ points }} </p>
+                </div>
+                <div class="statistics-item rating">
+                    <h4> Your rating </h4>
+                    <p>{% if rating and rating > 0 %}{{ '%.1f'|format(rating) }}{% else %}No ratings yet{% endif %}</p>
+                </div>
+                <div class="statistics-item subjects">
+                    <h4> Subjects </h4>
+                    <p> 7 </p>
+                </div>
+                <div class="statistics-item students">
+                    <h4> Students </h4>
+                    <p> 3 </p>
+                </div>
+            </section>
+
+            <section class="col-2">
+                <div class="col-2-item your_subjects">
+                    <div class="card-header">
+                        <h3>Your Subjects</h3>
+                        <a href="#">View all</a>
+                    </div>
+                    <p class="help">Click a subject to see your progress</p>
+
+                    <span class="subjects">
+                        <a href="math-page.html" class="subject-item math">Mathematika</a>
+                        <a href="english-page.html" class="subject-item bel">English</a>
+                        <a href="history-page.html" class="subject-item uvod">History</a>
+                        <a href="geo-page.html" class="subject-item geo">Geography</a>
+                    </span>
+                </div>
+                <div class="col-2-item top_helpers">
+                    <h3> Top Helpers </h3>
+                    <p> No helpers yet </p>
+                </div>
+            </section>
+            <section class="recent-activity">
+                <div class="recent-header">
+                    <h3> Recent activity </h3>
+                    <a href="forum.html"> View all </a>
+                </div>
+                <ul class="recent-list">
+                    <li class="recent-item">
+                        <div class="recent-message">
+                            <h3> Can someone help with programming? </h3>
+                            <p> 0 replies </p>
+                        </div>
+                        <div class="recent-information">
+                            <span> Raya Toteva |</span>
+                            <span> Uvod v programiraneto |</span>
+                            <span> 8th grade |</span>
+                            <span> question </span>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            <div class="gradient-box">
+                <h2>How Points Work</h2>
+                <section class="point">
+                    <div class="point-item ask_question">
+                        <h3> Ask a question </h3>
+                        <p> Costs 1 point </p>
+                        <p class="card-bottom"> -1 point </p>
+                    </div>
+                    <div class="point-item help_someone">
+                        <h3> Help someone </h3>
+                        <p> Earn 2 points </p>
+                        <p class="card-bottom"> +2 points </p>
+                    </div>
+
+                    <div class="point-item get_rating">
+                        <h3> Get a good rating </h3>
+                        <p> Earn 1 bonus point </p>
+                        <p class="card-bottom"> +1 point </p>
+                    </div>
+                </section>
+            </div>
+        </section>
+        <section id="Forum" class="page-section">
+            <div class="forum-hd">
+                <div class="forum-inro">
+                    <h1 class="forum-intro-item"> Forum </h1>
+                    <p class="forum-intro-item"> Browse subjects and join discussions </p>
+                </div>
+                {% if session.get('username') %}
+                <button class="forum-btn">+ Add subject </button>
+                {% endif %}
+            </div>
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+                    <path d="M20 20L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <input type="text" placeholder="Search subjects..." />
+            </div>
+            <section class="card-forum">
+            </section>
+        </section>
+        <section id="SubjectDetail" class="page-section">
+            <div class="subject-detail-header">
+                <button class="back-to-forum">← Back</button>
+                <div>
+                    <h1 id="detailSubjectName">Subject</h1>
+                    <p id="detailGradeName" class="subject-detail-grade">Grade</p>
+                </div>
+                <button class="new-post-btn">+ New Post</button>
+            </div>
+            <div id="detailPostList" class="detail-post-list">
+                <div class="detail-post-card">
+                    <div class="detail-post-title">Pick a grade to see its discussions</div>
+                    <div class="detail-post-text">Click a class level in the forum to open a subject-specific view.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="PostDetail" class="page-section">
+            <div class="post-detail-header">
+                <button class="post-back-btn">← Back to Forum</button>
+            </div>
+            <div class="post-detail-card">
+                <div class="post-detail-head">
+                    <div class="avatar-detail">R</div>
+                    <div class="post-detail-summary">
+                        <div class="post-detail-title-row">
+                            <h2 id="postDetailTitle">Post Title</h2>
+                            <span class="post-badge" id="postDetailBadge">Question</span>
+                        </div>
+                        <div class="post-detail-meta" id="postDetailMeta">Author · Subject · Grade · Date</div>
+                    </div>
+                </div>
+                <div class="post-detail-content" id="postDetailContent">Post content will appear here.</div>
+            </div>
+            <div class="reply-section">
+                <h3 id="postRepliesCount">0 Replies</h3>
+                <div id="replyList" class="reply-list"></div>
+                <form id="postReplyForm" class="reply-form">
+                    <textarea name="reply" placeholder="Write a reply... (+2 points for helping!)"></textarea>
+                    <button type="submit" class="reply-submit">Reply</button>
+                </form>
+            </div>
+        </section>
+
+        <div id="newPostModal" class="modal-overlay" style="display: none;">
+            <div class="modal-card">
+                <button class="modal-close" type="button">×</button>
+                <h2>New Post</h2>
+                <form id="newPostForm">
+                    <label class="modal-field">
+                        <span>Type</span>
+                        <select id="postTypeSelect" name="post_type">
+                            <option value="question">Question (-1 pt)</option>
+                            <option value="material">Material (+2 pts)</option>
+                            <option value="explanation">Explanation (+2 pts)</option>
+                        </select>
+                    </label>
+                    <label class="modal-field">
+                        <span>Title</span>
+                        <input type="text" name="title" placeholder="Title..." required>
+                    </label>
+                    <label class="modal-field">
+                        <span>Write your post</span>
+                        <textarea name="content" rows="6" placeholder="Write your post..." required></textarea>
+                    </label>
+                    <div class="modal-actions">
+                        <button type="button" class="modal-cancel">Cancel</button>
+                        <button type="submit" class="modal-submit">Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="rateModal" class="modal-overlay" style="display: none;">
+            <div class="rate-modal-card">
+                <button class="rate-modal-close" type="button">×</button>
+                <h2 id="rateModalTitle">Rate user</h2>
+                <p class="rate-modal-subtitle">How helpful were they?</p>
+                <div id="rateStars" class="rate-stars">
+                    <span class="star" data-value="1">☆</span>
+                    <span class="star" data-value="2">☆</span>
+                    <span class="star" data-value="3">☆</span>
+                    <span class="star" data-value="4">☆</span>
+                    <span class="star" data-value="5">☆</span>
+                </div>
+                <label class="modal-field">
+                    <span>Subject they helped with...</span>
+                    <input id="rateSubjectInput" name="subject" type="text" placeholder="Subject they helped with..." />
+                </label>
+                <label class="modal-field">
+                    <span>Leave a comment (optional)...</span>
+                    <textarea id="rateCommentInput" name="comment" rows="4" placeholder="Leave a comment (optional)..."></textarea>
+                </label>
+                <div class="modal-actions">
+                    <button type="button" class="rate-modal-cancel">Cancel</button>
+                    <button type="button" class="rate-modal-submit">Submit Rating</button>
+                </div>
+            </div>
+        </div>
+
+        <section id="Search" class="search-page page-section">
+            <div class="search-intro">
+                <h1 class="search-intro-item">Find students</h1>
+                <p class="search-intro-item">Search by name, subject, or school</p>
+            </div>
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+                    <path d="M20 20L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <input id="searchInput" type="text" placeholder="Search people..." />
+            </div>
+            <div class="search-cards" id="searchCards">
+                <p class="empty-text" id="searchEmpty">Loading users...</p>
+            </div>
+        </section>
+        <section id="Profile" class="page-section">
+            <div class="profile-container">
+                <section class="profile-header">
+                    <div class="avatar-pf avatar-r">R</div>
+                    <div>
+                        <div class="user-info">
+                            <h1>{{ session.get('username', 'Guest') }}</h1>
+                            <button class="edit-btn">Edit</button>
+                        </div>
+                        <p class="email">raya.l.toteva.2025@elsys-bg.org</p>
+
+                        <span class="badge">🌱 Novice</span>
+                    </div>
+                </section>
+                <div class="stats-grid">
+                    <div class="stat-card yellow">
+                        <h3>{{ points }}</h3>
+                        <p>Points</p>
+                    </div>
+                    <div class="stat-card orange">
+                        <h3>{% if rating and rating > 0 %}{{ '%.1f'|format(rating) }}{% else %}&mdash;{% endif %}</h3>
+                        <p>Avg Rating</p>
+                    </div>
+                    <div class="stat-card green">
+                        <h3>0</h3>
+                        <p>Friends</p>
+                    </div>
+                </div>
+                <section class="col-1">
+                    <div class="col-1-item top_helpers">
+                        <h3> Good at </h3>
+                        <p> No subjects added </p>
+                    </div>
+                    <div class="col-1-item your_subjects">
+                        <h3 class="card-header"> Need help with </h3>
+                        <span class="subjects">
+                            <p class="subject-item uvod"> Uvod v programiraneto </p>
+                            <p class="subject-item bel"> Bulgarski ezik </p>
+                            <p class="subject-item math"> Matematika </p>
+                            <p class="subject-item geo"> Geografiya i ikonomika </p>
+                        </span>
+                    </div>
+                </section>
+
+                <div class="ratings-box">
+                    <h3> Your Ratings</h3>
+                    <p class="empty-text">No ratings yet</p>
+                </div>
+            </div>
+        </section>
+        <section id="Auth" class="auth-container page-section">
+            <div id="loginForm">
+                <h2> Welcome to Study Buddy </h2>
+                <p class="underheader"> Sign in to continue</p>
+                {% if auth_error %}
+                <div class="auth-error">{{ auth_error }}</div>
+                {% endif %}
+                <form class="form" action="/auth" method="POST">
+                    <input type="hidden" name="action" value="login">
+                    <span> Email </span>
+                    <input type="email" name="email" placeholder="you@example.com" required>
+                    <span> Password </span>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <div class="modal-buttons">
+                        <button type="submit">Sign In</button>
+                    </div>
+                    <div class="under">
+                        <button type="button" class="inside" id="forgotPassBtn"> Forgot your password? </button>
+                        <button type="button" class="inside" id="goToRegisterBtn"> Need an account? <span>Sign up</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="registerForm" style="display: none;">
+                <span class="back-btn" id="backToLogin">&#8592; Back to sign in</span>
+                <h2>Create your account</h2>
+                <form action="/auth" method="POST">
+                    <input type="hidden" name="action" value="register">
+                    <span> Email </span>
+                    <input type="email" name="email" placeholder="you@example.com" required>
+                    <span> Password </span>
+                    <input type="password" name="password" placeholder="Min. 8 characters" required>
+                    <span> Confirm Password </span>
+                    <input type="password" name="confirm_password" placeholder="Re-enter password" required>
+                    <button type="submit" class="send-btn">Create account</button>
+                </form>
+            </div>
+
+            <div id="forgotForm" style="display: none;">
+                <span class="back-btn" id="backToLoginFromForgot">&#8592; Back to sign in</span>
+                <h2>Reset your password</h2>
+                <p class="reset">Enter your email and we'll send you a link to reset your password</p>
+                <span> Email </span>
+                <input type="email" placeholder="you@example.com">
+                <button class="send-btn">Send reset link</button>
+            </div>
+        </section>
+        <section id="addSubjectModal" class="modal" >
+            <div class="modal-content addsubject-content">
+                <span class="close-btn" style="float: right; position: static;"> × </span>
+                <h2> Add New Subject </h2>
+                <form action="/add_subject" method="POST">
+                    <label>Subject Name</label>
+                    <input id="subjectNameInput" type="text" name="subject_name" placeholder="e.g. Physics, Art History..." required="">
+                    <label>Class Levels</label>
+                    <div class="class-input-wrapper">
+                        <input type="text" id="classLevelInput" placeholder="e.g. 9th grade">
+                        <button type="button" id="addClassBtn">+</button>
+                    </div>
+
+                    <div id="tagsContainer" class="tags-container"></div>
+                    <input type="hidden" name="grades" id="gradesInput">
+                    <div id="subjectMessage" class="form-message"></div>
+                    <div style="overflow: auto; margin-top: 20px;">
+                        <button type="submit" class="add-subject-submit">Add Subject</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+    <script src="/static/scripts.js"></script>
+</body>
+
+</html>

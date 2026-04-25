@@ -8,6 +8,29 @@ main {
     display: none;
 }
 
+.page-section {
+    display: none;
+}
+
+.auth-error {
+    background-color: #ffe0e0;
+    border: 1px solid #ff7373;
+    color: #8b1c1c;
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.form-message {
+    margin-top: 16px;
+    color: #8b1c1c;
+    font-size: 0.95rem;
+}
+
+.form-message.success {
+    color: #1f6f2f;
+}
+
 header {
     display: flex;
     font-family: sans-serif;
@@ -79,8 +102,12 @@ h1 {
     font-weight: 700;
 }
 
-#SignUp:hover{
+#SignUp:hover {
     background-color: rgb(228 103 124);
+}
+
+.page-section {
+    display: none;
 }
 
 .statistics {
@@ -418,7 +445,7 @@ h2.banner {
 .forum-hd {
     display: flex;
     justify-content: space-between;
-    margin-right:96px;
+    margin-right: 96px;
 }
 
 button.forum-btn {
@@ -431,6 +458,7 @@ button.forum-btn {
 }
 
 button.forum-btn:hover {
+    cursor: pointer;
     background-color: #efa3af;
 }
 
@@ -478,14 +506,14 @@ button.forum-btn:hover {
     row-gap: 8px;
 }
 
-h1.forum-intro-item{
-    padding:0;
-    margin:0;
+h1.forum-intro-item {
+    padding: 0;
+    margin: 0;
     font-size: 30px;
     font-family: sans-serif;
 }
 
-p.forum-intro-item{
+p.forum-intro-item {
     margin: 0;
     color: gray;
     font-size: 18px;
@@ -496,6 +524,45 @@ p.forum-intro-item{
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     margin: 0rem 6rem;
+}
+
+.card-forum>div {
+    border: 1px lightgray solid;
+    border-radius: 1rem;
+    padding: 0rem 1rem 0rem 2rem;
+    margin-right: 0;    
+}
+
+.card-forum>div:nth-child(4n+1) {
+    background: linear-gradient(90deg,
+        rgb(248 240 255) 0%,
+        rgb(248 240 255 / 70%) 40%,
+        rgb(248 240 255 / 50%) 70%,
+        rgb(248 240 255 / 30%) 100%);
+}
+
+.card-forum>div:nth-child(4n+2) {
+    background: linear-gradient(90deg,
+        rgb(254 251 222) 0%,
+        rgb(254 251 222 / 70%) 40%,
+        rgb(254 251 222 / 50%) 70%,
+        rgb(254 251 222 / 30%) 100%);
+}
+
+.card-forum>div:nth-child(4n+3) {
+    background: linear-gradient(90deg,
+        rgb(255 242 225) 0%,
+        rgb(255 242 225 / 70%) 40%,
+        rgb(255 242 225 / 50%) 70%,
+        rgb(255 242 225 / 30%) 100%);
+}
+
+.card-forum>div:nth-child(4n) {
+    background: linear-gradient(90deg,
+        rgb(255 242 225) 0%,
+        rgb(255 242 225 / 70%) 40%,
+        rgb(255 242 225 / 50%) 70%,
+        rgb(220 252 231 / 30%) 100%);
 }
 
 .subject_forum-header {
@@ -527,7 +594,7 @@ p.forum-intro-item{
             rgb(254 251 222 / 70%) 40%,
             rgb(254 251 222 / 50%) 70%,
             rgb(254 251 222 / 30%) 100%);
-}   
+}
 
 .hist {
     background-color: rgb(255 242 225);
@@ -556,7 +623,8 @@ p.forum-intro-item{
     margin-top: 10px;
 }
 
-.card-forum button:hover{
+.card-forum button:hover {
+    cursor: pointer;
     background-color: lightgray;
     border: 1px gray solid;
 }
@@ -568,7 +636,7 @@ p.forum-intro-item{
 
 .grades a {
     text-decoration: none;
-    background-color: white;  
+    background-color: white;
     padding: 10px 18px;
     border-radius: 18px;
     color: black;
@@ -589,6 +657,357 @@ p.forum-intro-item{
     cursor: pointer;
 }
 
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(22, 22, 22, 0.45);
+    z-index: 999;
+}
+
+.modal-card {
+    width: min(540px, calc(100% - 36px));
+    background: #fff;
+    border-radius: 28px;
+    padding: 28px 30px;
+    box-shadow: 0 22px 60px rgb(18 25 38 / 16%);
+    position: relative;
+}
+
+.modal-card h2 {
+    margin: 0 0 20px;
+    font-size: 1.45rem;
+}
+
+.modal-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    border: none;
+    background: transparent;
+    font-size: 1.7rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.modal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+    font-family: sans-serif;
+    color: #333;
+}
+
+.modal-field input,
+.modal-field textarea,
+.modal-field select {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    padding: 14px 16px;
+    font-size: 1rem;
+    background: #fbfaf8;
+    outline: none;
+}
+
+.modal-field textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.modal-cancel,
+.modal-submit {
+    border: none;
+    border-radius: 999px;
+    padding: 12px 22px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.modal-cancel {
+    background: #f3f0ee;
+    color: #3b3a3a;
+}
+
+.modal-submit {
+    background: #7cbc6a;
+    color: white;
+}
+
+.modal-submit:hover {
+    background: #5c9b51;
+}
+
+.subject-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 2rem 6rem 1rem;
+    padding: 1.5rem 2rem;
+    border-radius: 1rem;
+    background-color: white;
+    border: 1px solid #e0d7dd;
+}
+
+.subject-detail-header button {
+    border: none;
+    border-radius: 999px;
+    padding: 12px 18px;
+    background-color: #ecc8ce;
+    color: #3d2b33;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.subject-detail-header button:hover {
+    background-color: #e5adb9;
+}
+
+.subject-detail-grade {
+    margin: 0.5rem 0 0;
+    color: gray;
+    font-size: 1rem;
+}
+
+.detail-post-list {
+    display: grid;
+    gap: 1.5rem;
+    margin: 0 6rem 2rem;
+}
+
+.detail-post-card {
+    background-color: white;
+    border: 1px solid #ece3e8;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.detail-post-card.clickable-post {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.detail-post-card.clickable-post:hover {
+    background-color: #faf8f6;
+}
+
+.detail-post-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+}
+
+.detail-post-meta {
+    color: #8b8b90;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.detail-post-text {
+    color: #6b646c;
+    line-height: 1.5;
+}
+
+.post-detail-header {
+    margin: 2rem 6rem 1rem;
+}
+
+.post-back-btn {
+    border: none;
+    background: transparent;
+    color: #4f4f4f;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.post-detail-card {
+    margin: 0 6rem 1.5rem;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    background: white;
+    box-shadow: 0 12px 32px rgb(14 22 30 / 8%);
+    border: 1px solid #ece3e8;
+}
+
+.post-detail-head {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.avatar-detail {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    background: linear-gradient(135deg, #8fc0ff, #5f9ef3);
+    color: white;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.post-detail-summary {
+    width: 100%;
+}
+
+.post-detail-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.55rem;
+}
+
+.post-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #e8f4ff;
+    color: #1c6bb8;
+    font-size: 0.95rem;
+}
+
+.post-detail-meta {
+    color: #7a7a80;
+    font-size: 0.95rem;
+}
+
+.post-detail-content {
+    font-size: 1rem;
+    color: #4f4f55;
+    line-height: 1.75;
+}
+
+.reply-section {
+    margin: 0 6rem 2rem;
+    background: white;
+    border: 1px solid #ece3e8;
+    border-radius: 1.5rem;
+    padding: 1.75rem;
+}
+
+.reply-section h3 {
+    margin: 0 0 1rem;
+    font-size: 1.1rem;
+}
+
+.reply-list {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.reply-card {
+    display: flex;
+    gap: 1rem;
+    background: #fdfcfb;
+    border: 1px solid #ece8e5;
+    border-radius: 1.25rem;
+    padding: 1rem 1.25rem;
+}
+
+.reply-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8fc0ff, #5f9ef3);
+    color: white;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+
+.reply-body {
+    width: 100%;
+}
+
+.reply-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.55rem;
+}
+
+.reply-author {
+    font-weight: 700;
+    color: #312e35;
+}
+
+.reply-time {
+    color: #8b8b90;
+    font-size: 0.95rem;
+}
+
+.reply-rate-btn {
+    border: none;
+    background: transparent;
+    color: #6e6eea;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.reply-text {
+    color: #4f4f55;
+    line-height: 1.7;
+}
+
+.reply-empty {
+    color: #7a7a80;
+    padding: 1rem 1.25rem;
+    background: #faf7f4;
+    border: 1px dashed #e5e1dc;
+    border-radius: 1rem;
+}
+
+.reply-form textarea {
+    width: 100%;
+    min-height: 120px;
+    border: 1px solid #ddd;
+    border-radius: 1rem;
+    padding: 16px;
+    resize: vertical;
+    font-size: 1rem;
+    background: #fbfaf8;
+}
+
+.reply-form {
+    display: grid;
+    gap: 1rem;
+}
+
+.reply-submit {
+    width: fit-content;
+    align-self: flex-end;
+    border: none;
+    border-radius: 999px;
+    padding: 12px 24px;
+    background: #7cbc6a;
+    color: white;
+    cursor: pointer;
+}
+
+.reply-submit:hover {
+    background: #5c9b51;
+}
 
 /* Search.html */
 .search-card {
@@ -614,9 +1033,9 @@ p.forum-intro-item{
     max-height: 75px;
 }
 
-h1.search-intro-item{
-    padding:0;
-    margin:0;
+h1.search-intro-item {
+    padding: 0;
+    margin: 0;
     font-size: 30px;
     font-family: sans-serif;
 }
@@ -634,7 +1053,7 @@ p.search-intro-item {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size:25px;
+    font-size: 25px;
     font-weight: 600;
     color: white;
     flex-shrink: 0;
@@ -650,7 +1069,7 @@ p.search-intro-item {
     background: linear-gradient(135deg, #8fc0ff, #5f9ef3);
 }
 
-.avatar-e{
+.avatar-e {
     background: linear-gradient(135deg, #b18fff, #8362f3);
 }
 
@@ -723,7 +1142,7 @@ span.nivo {
     display: flex;
     align-items: center;
     position: relative;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .avatar {
@@ -737,7 +1156,7 @@ span.nivo {
     font-size: 25px;
     color: white;
     margin-right: 11px;
-    margin-top:0;
+    margin-top: 0;
 }
 
 .badge {
@@ -751,12 +1170,12 @@ span.nivo {
 .user-info {
     display: flex;
     justify-content: space-between;
-    gap:34rem;
+    gap: 34rem;
 }
 
-.user-info h1{
-    margin:0;
-    padding:0;
+.user-info h1 {
+    margin: 0;
+    padding: 0;
 }
 
 button.edit-btn {
@@ -766,7 +1185,7 @@ button.edit-btn {
     border: 1px solid lightgray;
 }
 
-button.edit-btn:hover{
+button.edit-btn:hover {
     background-color: rgb(186, 189, 188);
 }
 
@@ -774,11 +1193,11 @@ p.email {
     margin-top: 0px;
 }
 
-.stat-card h3{
+.stat-card h3 {
     margin-bottom: 3px;
 }
 
-.stat-card p{
+.stat-card p {
     margin-top: 0px;
 }
 
@@ -797,9 +1216,17 @@ p.email {
     border: 1px solid lightgray;
 }
 
-.yellow { background-color: #fdf5d7; }
-.orange { background-color: #f8e5d6; }
-.green { background-color: #d6ede5; }
+.yellow {
+    background-color: #fdf5d7;
+}
+
+.orange {
+    background-color: #f8e5d6;
+}
+
+.green {
+    background-color: #d6ede5;
+}
 
 /* Subjects & Tags */
 .subjects-grid {
@@ -809,7 +1236,8 @@ p.email {
     margin-top: 20px;
 }
 
-.subject-box, .ratings-box {
+.subject-box,
+.ratings-box {
     background: white;
     padding: 25px;
     border-radius: 20px;
@@ -824,11 +1252,23 @@ p.email {
     font-size: 14px;
 }
 
-.orange-tag { background: #ecdcc9; }
-.yellow-tag { background: #f2e9c9; }
-.purple-tag { background: #e3d9e8; }
+.orange-tag {
+    background: #ecdcc9;
+}
 
-.empty-text { color: #888; text-align: center; margin-top: 20px; }
+.yellow-tag {
+    background: #f2e9c9;
+}
+
+.purple-tag {
+    background: #e3d9e8;
+}
+
+.empty-text {
+    color: #888;
+    text-align: center;
+    margin-top: 20px;
+}
 
 
 .col-1 {
@@ -871,7 +1311,7 @@ p.email {
     margin-top: 0;
 }
 
-.col-1-item.your_subjects h3{
+.col-1-item.your_subjects h3 {
     color: blue;
     margin-bottom: 12px;
 }
@@ -893,14 +1333,16 @@ p.email {
 
 /* Фоновото затъмняване */
 .modal {
-    display: none; /* Скрито по подразбиране */
+    display: none;
+    /* Скрито по подразбиране */
     position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5); /* Полупрозрачен черен фон */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Полупрозрачен черен фон */
 }
 
 /* Самата кутия на формата */
@@ -916,14 +1358,14 @@ p.email {
 
 /* Бутонът за връщане */
 .close-btn {
-  position: absolute;
-  right: 20px;
-  top: 15px;
-  font-size: 28px;
-  font-weight: bold;
-  color: #aaa;
-  cursor: pointer;
-  transition: 0.3s;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .modal-content input {
@@ -973,23 +1415,23 @@ button.inside {
     margin: 10px 0px 0px;
 }
 
-button.inside:hover{
-    color:rgb(74, 74, 74);
-    cursor:pointer;
+button.inside:hover {
+    color: rgb(74, 74, 74);
+    cursor: pointer;
 }
 
-.inside span{
-    color:black;
+.inside span {
+    color: black;
 }
 
 .under {
     display: flex;
-    justify-content:space-between;
+    justify-content: space-between;
 }
 
 p.reset {
     color: gray;
-    margin-bottom:28px;
+    margin-bottom: 28px;
 }
 
 button.send-btn {
@@ -1022,32 +1464,38 @@ button.send-btn {
 }
 
 .back-btn:hover {
-    color: #333; /* Текстът става по-тъмен при посочване */
+    color: #333;
+    /* Текстът става по-тъмен при посочване */
 }
 
 /* Основен стил за фона на модала */
 .modal {
-    display: none; /* Скрива ги първоначално */
+    display: none;
+    /* Скрива ги първоначално */
     position: fixed;
     z-index: 2000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачен черен фон */
-    backdrop-filter: blur(2px); /* Размазване на фона отзад */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Полупрозрачен черен фон */
+    backdrop-filter: blur(2px);
+    /* Размазване на фона отзад */
 }
 
 /* Контейнерите на прозорците */
 .modal-content {
     background-color: #fff;
-    margin: 7% auto; /* Разстояние от върха */
+    margin: 7% auto;
+    /* Разстояние от върха */
     padding: 65px 35px 35px;
     border-radius: 15px;
     width: 400px;
     position: relative;
     box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
-    text-align: left; /* Текстът е вляво за изчистен вид */
+    text-align: left;
+    /* Текстът е вляво за изчистен вид */
 }
 
 .reg-modal-content {
@@ -1097,7 +1545,9 @@ input {
 }
 
 /* Черни главни бутони */
-button[type="submit"], .send-btn, .reg-submit-btn {
+button[type="submit"],
+.send-btn,
+.reg-submit-btn {
     width: 100%;
     padding: 12px;
     background-color: #1a1a1b;
@@ -1126,7 +1576,8 @@ button[type="submit"], .send-btn, .reg-submit-btn {
     width: 450px;
     border-radius: 20px;
     padding: 25px 35px;
-    text-align: left; /* На снимката текстът е вляво */
+    text-align: left;
+    /* На снимката текстът е вляво */
 }
 
 .addsubject-content h2 {
@@ -1146,13 +1597,15 @@ button[type="submit"], .send-btn, .reg-submit-btn {
 
 /* Зеленият бутон Add Subject */
 .add-subject-submit {
-    background-color: #b8d8be; /* Светло зелено от снимката */
+    background-color: #b8d8be;
+    /* Светло зелено от снимката */
     color: #3e5a44;
     padding: 10px 25px;
     border-radius: 12px;
     border: none;
     font-weight: bold;
-    float: right; /* Подравнен вдясно */
+    float: right;
+    /* Подравнен вдясно */
     cursor: pointer;
 }
 
@@ -1171,12 +1624,15 @@ button[type="submit"], .send-btn, .reg-submit-btn {
 }
 
 /* Уверяваме се, че padding-ът не раздува елементите */
-.addsubject-content *, .addsubject-content *::before, .addsubject-content *::after {
+.addsubject-content *,
+.addsubject-content *::before,
+.addsubject-content *::after {
     box-sizing: border-box;
 }
 
 .class-input-wrapper {
-    display: flex !important; /* Насилствено включваме flex */
+    display: flex !important;
+    /* Насилствено включваме flex */
     flex-direction: row;
     gap: 8px;
     align-items: center;
@@ -1185,8 +1641,10 @@ button[type="submit"], .send-btn, .reg-submit-btn {
 }
 
 #classLevelInput {
-    flex: 1; /* Взема цялото свободно място */
-    min-width: 0; /* Важно за flex контейнери */
+    flex: 1;
+    /* Взема цялото свободно място */
+    min-width: 0;
+    /* Важно за flex контейнери */
     height: 40px;
     padding: 8px 12px;
     border: 1px solid #ccc;
@@ -1194,21 +1652,86 @@ button[type="submit"], .send-btn, .reg-submit-btn {
 }
 
 #addClassBtn {
-    display: flex !important; /* Уверяваме се, че се вижда */
+    display: flex !important;
+    /* Уверяваме се, че се вижда */
     justify-content: center;
     align-items: center;
     width: 42px;
     height: 40px;
-    min-width: 40px; /* Предотвратява свиване */
+    min-width: 40px;
+    /* Предотвратява свиване */
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 20px;
     cursor: pointer;
     font-size: 22px;
-    color: #333;;
+    color: #333;
+    ;
     padding: 0;
 }
 
 #addClassBtn:hover {
     background-color: #e4e4e4;
+}
+
+.auth-container {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    background-color: #fefefe;
+    border: 1px solid #888;
+    border-radius: 10px;
+    margin: 15% auto;
+}
+
+.form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.modal-buttons button {
+    width: 100%;
+    padding: 10px;
+    background: #6a11cb;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.under {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.inside {
+    background: none;
+    border: none;
+    color: #6a11cb;
+    cursor: pointer;
+}
+
+.send-btn {
+    width: 100%;
+    padding: 10px;
+    background: #6a11cb;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.back-btn {
+    cursor: pointer;
+    color: #6a11cb;
+    margin-bottom: 20px;
+}
+
+.password-content,
+.login-content {
+    display: none;
 }
