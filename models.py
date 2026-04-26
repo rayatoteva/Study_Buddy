@@ -14,6 +14,11 @@ class User(db.Model):
     role = db.Column(db.String(20), default='student')
     points = db.Column(db.Integer, default=0)
     rating = db.Column(db.Float, default=0.0)
+    school = db.Column(db.String(200), default='')
+    class_level = db.Column(db.String(50), default='')
+    bio = db.Column(db.Text, default='')
+    good_at = db.Column(db.Text, default='')
+    need_help = db.Column(db.Text, default='')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
@@ -78,6 +83,8 @@ class Rating(db.Model):
     from_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     to_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     value = db.Column(db.Integer)
+    subject = db.Column(db.String(200), default='')
+    comment = db.Column(db.Text, default='')
 
 
 # FRIENDSHIPS

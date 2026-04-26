@@ -1,7 +1,8 @@
 from flask import request, jsonify, render_template, session, redirect, url_for, abort
 from app import app, db
-from models import User, Question, Answer, Rating, Subject, Grade, SubjectGrade
+from models import User, Question, Answer, Rating, Subject, Grade, SubjectGrade, PointsHistory
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import func
 
 # REGISTER
 @app.route('/register', methods=['POST'])
@@ -64,7 +65,22 @@ def create_question():
         content=content
     )
     db.session.add(q)
-    db.session.commit()
+
+    asker = User.query.get(session['user_id'])
+    if asker:
+        asker.points = int(asker.points or 0) - 1
+        db.session.add(PointsHistory(
+            user_id=asker.id,
+            action='ask_question',
+            points=-1
+        ))
+
+    try:
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        return jsonify({'error': 'Unable to create question'}), 500
+
     return jsonify({"message": "Question created", "id": q.id})
 
 
@@ -116,7 +132,8 @@ def get_question(question_id):
                 "id": a.id,
                 "content": a.content,
                 "created_at": a.created_at.strftime('%Y-%m-%d %H:%M'),
-                "user": User.query.get(a.user_id).username if a.user_id else 'Unknown'
+                "user": User.query.get(a.user_id).username if a.user_id else 'Unknown',
+                "user_id": a.user_id
             }
             for a in answers
         ]
@@ -137,6 +154,18 @@ def get_users():
         }
         for u in users
     ])
+
+
+@app.route('/api/me-summary', methods=['GET'])
+def get_me_summary():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Authentication required'}), 401
+    user = User.query.get(session['user_id'])
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    return jsonify({
+        'points': int(user.points or 0)
+    })
 
 
 # GET SUBJECTS
@@ -180,22 +209,101 @@ def answer_question():
         content=content
     )
     db.session.add(a)
-    db.session.commit()
+
+    # Reward helpers with +2 points for each posted answer.
+    user = User.query.get(session['user_id'])
+    if user:
+        user.points = int(user.points or 0) + 2
+        db.session.add(PointsHistory(
+            user_id=user.id,
+            action='help_someone',
+            points=2
+        ))
+
+    try:
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        return jsonify({'error': 'Unable to save answer'}), 500
+
     return jsonify({"message": "Answer added", "id": a.id})
 
 
 # RATE USER
 @app.route('/rate', methods=['POST'])
 def rate_user():
-    data = request.json
+    if 'user_id' not in session:
+        return jsonify({'error': 'Authentication required'}), 401
+    data = request.get_json(silent=True) or {}
+    to_user_id = data.get('to_user_id')
+    value = data.get('value')
+    if not to_user_id or not value:
+        return jsonify({'error': 'Missing to_user_id or value'}), 400
+    if int(to_user_id) == session['user_id']:
+        return jsonify({'error': 'You cannot rate yourself'}), 400
+    subject = (data.get('subject') or '').strip()
+    comment = (data.get('comment') or '').strip()
     rating = Rating(
-        from_user_id=data['from_user_id'],
-        to_user_id=data['to_user_id'],
-        value=data['value']
+        from_user_id=session['user_id'],
+        to_user_id=int(to_user_id),
+        value=int(value),
+        subject=subject,
+        comment=comment
     )
     db.session.add(rating)
-    db.session.commit()
-    return jsonify({"message": "User rated"})
+    # Update the user's average rating
+    to_user = User.query.get(int(to_user_id))
+    if to_user:
+        all_ratings = Rating.query.filter_by(to_user_id=int(to_user_id)).all()
+        total = sum(r.value for r in all_ratings) + int(value)
+        to_user.rating = total / (len(all_ratings) + 1)
+
+        # Good rating bonus: +2 points for ratings 4 and 5.
+        if int(value) >= 4:
+            to_user.points = int(to_user.points or 0) + 2
+            db.session.add(PointsHistory(
+                user_id=to_user.id,
+                action='good_rating',
+                points=2
+            ))
+    try:
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        return jsonify({'error': 'Unable to save rating'}), 500
+    return jsonify({'message': 'User rated'})
+
+
+@app.route('/api/my-ratings', methods=['GET'])
+def my_ratings():
+    if 'user_id' not in session:
+        return jsonify([])
+    ratings = Rating.query.filter_by(to_user_id=session['user_id']).order_by(Rating.id.desc()).all()
+    result = []
+    for r in ratings:
+        from_user = User.query.get(r.from_user_id)
+        result.append({
+            'value': r.value,
+            'subject': r.subject or '',
+            'comment': r.comment or '',
+            'from_username': from_user.username if from_user else 'Unknown'
+        })
+    return jsonify(result)
+
+
+@app.route('/api/my-question-subjects', methods=['GET'])
+def my_question_subjects():
+    if 'user_id' not in session:
+        return jsonify([])
+    questions = Question.query.filter_by(user_id=session['user_id']).all()
+    seen = set()
+    subjects = []
+    for q in questions:
+        sg = SubjectGrade.query.get(q.subject_grade_id)
+        if sg and sg.subject and sg.subject.name not in seen:
+            seen.add(sg.subject.name)
+            subjects.append(sg.subject.name)
+    return jsonify(subjects)
 
 
 # LOGOUT
@@ -204,6 +312,49 @@ def logout():
     session.pop('user_id', None)
     session.pop('username', None)
     return redirect(url_for('spa', page='home'))
+
+
+# UPDATE PROFILE
+@app.route('/api/profile', methods=['GET', 'POST'])
+def update_profile():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Authentication required'}), 401
+
+    user = User.query.get(session['user_id'])
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    if request.method == 'GET':
+        return jsonify({
+            'school': user.school or '',
+            'class_level': user.class_level or '',
+            'bio': user.bio or '',
+            'good_at': [item.strip() for item in (user.good_at or '').split(',') if item.strip()],
+            'need_help': [item.strip() for item in (user.need_help or '').split(',') if item.strip()]
+        })
+
+    data = request.get_json(silent=True) or {}
+    user.school = (data.get('school') or '').strip()
+    user.class_level = (data.get('class_level') or '').strip()
+    user.bio = (data.get('bio') or '').strip()
+
+    good_at = data.get('good_at') or []
+    need_help = data.get('need_help') or []
+    if isinstance(good_at, str):
+        good_at = [item.strip() for item in good_at.split(',') if item.strip()]
+    if isinstance(need_help, str):
+        need_help = [item.strip() for item in need_help.split(',') if item.strip()]
+
+    user.good_at = ','.join([item for item in good_at if item.strip()])
+    user.need_help = ','.join([item for item in need_help if item.strip()])
+
+    try:
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        return jsonify({'error': 'Unable to save profile right now. Please try again.'}), 500
+
+    return jsonify({'message': 'Profile updated successfully'})
 
 
 # ADD SUBJECT
@@ -304,26 +455,24 @@ def auth():
                 session['username'] = user.username
                 return redirect(url_for('spa', page='home'))
 
+    subject_count = Subject.query.count()
+    student_count = User.query.filter_by(role='student').count()
     return render_template(
         'index.html',
         points=0,
         username=session.get('username', 'Guest'),
         auth_error=auth_error,
-        active_page='auth'
+        active_page='auth',
+        subject_count=subject_count,
+        student_count=student_count
     )
 
 
 # HOME PAGE
 @app.route('/')
 def home():
-    if 'user_id' in session:
-        user = User.query.get(session['user_id'])
-        points = user.points if user else 0
-        username = user.username if user else 'Guest'
-    else:
-        points = 0
-        username = 'Guest'
-    return render_template('index.html', points=points, username=username)
+    # Reuse the same context as /home so recent activity is available on first load.
+    return spa('home')
 
 
 @app.route('/subject/<subject_name>/<grade>')
@@ -332,10 +481,24 @@ def subject_detail(subject_name, grade):
         user = User.query.get(session['user_id'])
         points = user.points if user else 0
         username = user.username if user else 'Guest'
+        email = user.email if user else ''
+        school = user.school if user else ''
+        class_level = user.class_level if user else ''
+        bio = user.bio if user else ''
+        good_at = user.good_at if user else ''
+        need_help = user.need_help if user else ''
     else:
         points = 0
         username = 'Guest'
-    return render_template('index.html', points=points, username=username)
+        email = ''
+        school = ''
+        class_level = ''
+        bio = ''
+        good_at = ''
+        need_help = ''
+    subject_count = Subject.query.count()
+    student_count = User.query.filter_by(role='student').count()
+    return render_template('index.html', points=points, username=username, subject_count=subject_count, student_count=student_count, email=email, school=school, class_level=class_level, bio=bio, good_at=good_at, need_help=need_help)
 
 
 @app.route('/post/<int:question_id>')
@@ -344,10 +507,24 @@ def post_detail(question_id):
         user = User.query.get(session['user_id'])
         points = user.points if user else 0
         username = user.username if user else 'Guest'
+        email = user.email if user else ''
+        school = user.school if user else ''
+        class_level = user.class_level if user else ''
+        bio = user.bio if user else ''
+        good_at = user.good_at if user else ''
+        need_help = user.need_help if user else ''
     else:
         points = 0
         username = 'Guest'
-    return render_template('index.html', points=points, username=username)
+        email = ''
+        school = ''
+        class_level = ''
+        bio = ''
+        good_at = ''
+        need_help = ''
+    subject_count = Subject.query.count()
+    student_count = User.query.filter_by(role='student').count()
+    return render_template('index.html', points=points, username=username, subject_count=subject_count, student_count=student_count, email=email, school=school, class_level=class_level, bio=bio, good_at=good_at, need_help=need_help)
 
 
 @app.route('/', defaults={'page': 'home'})
@@ -361,8 +538,85 @@ def spa(page):
         user = User.query.get(session['user_id'])
         points = user.points if user else 0
         username = user.username if user else 'Guest'
+        email = user.email if user else ''
+        school = user.school if user else ''
+        class_level = user.class_level if user else ''
+        bio = user.bio if user else ''
+        good_at = user.good_at if user else ''
+        need_help = user.need_help if user else ''
+        received = Rating.query.filter_by(to_user_id=user.id).all() if user else []
+        rating_count = len(received)
+        avg_rating = round(sum(r.value for r in received) / rating_count, 1) if rating_count else 0
     else:
         points = 0
         username = 'Guest'
+        email = ''
+        school = ''
+        class_level = ''
+        bio = ''
+        good_at = ''
+        need_help = ''
+        avg_rating = 0
+        rating_count = 0
+    subject_count = Subject.query.count()
+    student_count = User.query.filter_by(role='student').count()
 
-    return render_template('index.html', points=points, username=username)
+    answers_summary = db.session.query(
+        Answer.question_id.label('question_id'),
+        func.max(Answer.created_at).label('latest_answer_at'),
+        func.count(Answer.id).label('answers_count')
+    ).group_by(Answer.question_id).subquery()
+
+    raw_posts = db.session.query(
+        Question,
+        answers_summary.c.latest_answer_at,
+        answers_summary.c.answers_count
+    ).outerjoin(
+        answers_summary,
+        Question.id == answers_summary.c.question_id
+    ).all()
+
+    sortable_posts = []
+    for question, latest_answer_at, answers_count in raw_posts:
+        last_activity_at = latest_answer_at if latest_answer_at and latest_answer_at > question.created_at else question.created_at
+        sortable_posts.append((question, answers_count or 0, last_activity_at))
+
+    sortable_posts.sort(key=lambda item: item[2], reverse=True)
+    recent_activity_posts = []
+    for question, answers_count, _ in sortable_posts[:2]:
+        subject_grade = SubjectGrade.query.get(question.subject_grade_id)
+        author = User.query.get(question.user_id)
+        recent_activity_posts.append({
+            'id': question.id,
+            'title': question.title,
+            'answers_count': int(answers_count),
+            'author': author.username if author else 'Unknown',
+            'subject': subject_grade.subject.name if subject_grade and subject_grade.subject else 'Unknown',
+            'grade': subject_grade.grade.name if subject_grade and subject_grade.grade else 'Unknown',
+            'type': 'question'
+        })
+
+    top_helpers = []
+    for u in User.query.filter(User.points > 0).order_by(User.points.desc()).limit(2).all():
+        top_helpers.append({
+            'username': u.username,
+            'points': u.points or 0
+        })
+
+    return render_template(
+        'index.html',
+        points=points,
+        username=username,
+        subject_count=subject_count,
+        student_count=student_count,
+        email=email,
+        school=school,
+        class_level=class_level,
+        bio=bio,
+        good_at=good_at,
+        need_help=need_help,
+        avg_rating=avg_rating,
+        rating_count=rating_count,
+        recent_activity_posts=recent_activity_posts,
+        top_helpers=top_helpers
+    )

@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/static/styles.css">
 </head>
 
-<body>
+<body data-logged-in="{{ 'true' if session.get('username') else 'false' }}">
     <header>
         <h1> Study Buddy </h1>
         <nav class="nav">
@@ -39,66 +39,108 @@
                     or help someone out! </p>
                 <span class="banner-buttons">
                     <a href="/forum" id="forumLink" class="active"> Browse forum </a>
-                    <a href="/#Search" id="searchLink"> Find students </a>
+                    <a href="/search" id="searchLink"> Find students </a>
                 </span>
             </div>
             <section class="statistics">
+                {% if username and username != 'Guest' %}
                 <div class=" statistics-item points">
                     <h4> Your points </h4>
                     <p id="pts-num"> {{ points }} </p>
                 </div>
                 <div class="statistics-item rating">
                     <h4> Your rating </h4>
-                    <p>{% if rating and rating > 0 %}{{ '%.1f'|format(rating) }}{% else %}No ratings yet{% endif %}</p>
+                    <p>{% if avg_rating and avg_rating > 0 %}{{ '%.1f'|format(avg_rating) }}{% else %}No ratings yet{% endif %}</p>
                 </div>
+                {% endif %}
                 <div class="statistics-item subjects">
                     <h4> Subjects </h4>
-                    <p> 7 </p>
+                    <p> {{ subject_count }} </p>
                 </div>
                 <div class="statistics-item students">
                     <h4> Students </h4>
-                    <p> 3 </p>
+                    <p> {{ student_count }} </p>
                 </div>
             </section>
 
             <section class="col-2">
                 <div class="col-2-item your_subjects">
                     <div class="card-header">
-                        <h3>Your Subjects</h3>
-                        <a href="#">View all</a>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles w-5 h-5 text-primary"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg>
+                        <h3> Your Subjects</h3>
+                        <a href="/profile" id="homeEditSubjectsLink">Edit</a>
                     </div>
-                    <p class="help">Click a subject to see your progress</p>
+                    <p class="help"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-help w-3 h-3"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg> Need help with</p>
 
-                    <span class="subjects">
-                        <a href="math-page.html" class="subject-item math">Mathematika</a>
-                        <a href="english-page.html" class="subject-item bel">English</a>
-                        <a href="history-page.html" class="subject-item uvod">History</a>
-                        <a href="geo-page.html" class="subject-item geo">Geography</a>
+                    <span class="subjects" id="homeNeedHelpSubjectsList">
+                        {% if need_help %}
+                            {% for item in need_help.split(',') %}
+                                {% if item.strip() %}
+                                    <span class="profile-tag-pill color-{{ (loop.index0 % 6) + 1 }}">{{ item.strip() }}</span>
+                                {% endif %}
+                            {% else %}
+                                <p class="empty-text">No subjects yet</p>
+                            {% endfor %}
+                        {% else %}
+                            <p class="empty-text">No subjects yet</p>
+                        {% endif %}
                     </span>
                 </div>
                 <div class="col-2-item top_helpers">
-                    <h3> Top Helpers </h3>
-                    <p> No helpers yet </p>
+                    <div class="top-helpers-header">                        
+                        <span class="top-helpers-star-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-star w-5 h-5 text-yellow-500"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path></svg></span>
+                        <h3>Top Helpers</h3>
+                    </div>
+                    {% if top_helpers %}
+                    <ul class="top-helpers-list">
+                        {% for helper in top_helpers %}
+                        <li class="top-helper-row">
+                            <span class="top-helper-rank">{{ loop.index }}</span>
+                            <div class="top-helper-avatar avatar-{{ helper.username[0]|lower }}">{{ helper.username[0]|upper }}</div>
+                            <div class="top-helper-info">
+                                <span class="top-helper-name">{{ helper.username }}</span>
+                                <span class="top-helper-badge">🌱 Novice</span>
+                            </div>
+                            <span class="top-helper-rating">⭐ {{ helper.points }} pts</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="empty-text">No helpers yet</p>
+                    {% endif %}
                 </div>
             </section>
             <section class="recent-activity">
                 <div class="recent-header">
-                    <h3> Recent activity </h3>
-                    <a href="forum.html"> View all </a>
+                    <h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square w-5 h-5 text-primary"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Recent activity </h3>
+                    <a href="/forum"> View all </a>
                 </div>
                 <ul class="recent-list">
+                    {% for post in recent_activity_posts|default([]) %}
                     <li class="recent-item">
                         <div class="recent-message">
-                            <h3> Can someone help with programming? </h3>
-                            <p> 0 replies </p>
+                            <h3>{{ post.title }}</h3>
+                            <p>{{ post.answers_count }} replies</p>
                         </div>
                         <div class="recent-information">
-                            <span> Raya Toteva |</span>
-                            <span> Uvod v programiraneto |</span>
-                            <span> 8th grade |</span>
-                            <span> question </span>
+                            <span>{{ post.author }} |</span>
+                            <span>{{ post.subject }} |</span>
+                            <span>{{ post.grade }} |</span>
+                            <span>{{ post.type }}</span>
                         </div>
                     </li>
+                    {% else %}
+                    <li class="recent-item">
+                        <div class="recent-message">
+                            <h3>No recent posts yet</h3>
+                            <p>0 replies</p>
+                        </div>
+                        <div class="recent-information">
+                            <span>Be the first to ask a question.</span>
+                        </div>
+                    </li>
+                    {% endfor %}
                 </ul>
             </section>
             <div class="gradient-box">
@@ -117,8 +159,8 @@
 
                     <div class="point-item get_rating">
                         <h3> Get a good rating </h3>
-                        <p> Earn 1 bonus point </p>
-                        <p class="card-bottom"> +1 point </p>
+                        <p> Earn 2 bonus points </p>
+                        <p class="card-bottom"> +2 points </p>
                     </div>
                 </section>
             </div>
@@ -261,51 +303,111 @@
         </section>
         <section id="Profile" class="page-section">
             <div class="profile-container">
+                <div class="profile-top-card">
                 <section class="profile-header">
                     <div class="avatar-pf avatar-r">R</div>
                     <div>
                         <div class="user-info">
                             <h1>{{ session.get('username', 'Guest') }}</h1>
-                            <button class="edit-btn">Edit</button>
+                            {% if session.get('username') %}
+                            <button type="button" class="edit-btn" id="profileEditBtn">Edit</button>
+                            {% endif %}
                         </div>
-                        <p class="email">raya.l.toteva.2025@elsys-bg.org</p>
-
+                        <p class="email" id="profileEmail">{{ email }}</p>
                         <span class="badge">🌱 Novice</span>
                     </div>
                 </section>
+
                 <div class="stats-grid">
                     <div class="stat-card yellow">
-                        <h3>{{ points }}</h3>
+                        <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-award w-5 h-5 mx-auto mb-1 text-yellow-600"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg></span>
+                        <h3 id="profilePoints">{{ points }}</h3>
                         <p>Points</p>
                     </div>
                     <div class="stat-card orange">
-                        <h3>{% if rating and rating > 0 %}{{ '%.1f'|format(rating) }}{% else %}&mdash;{% endif %}</h3>
+                        <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-star w-5 h-5 mx-auto mb-1 text-orange-600"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path></svg>
+
+</span>
+                        <h3>{% if avg_rating and avg_rating > 0 %}{{ '%.1f'|format(avg_rating) }}{% else %}&mdash;{% endif %}</h3>
                         <p>Avg Rating</p>
                     </div>
                     <div class="stat-card green">
+                        <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users w-5 h-5 mx-auto mb-1 text-teal-600"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
                         <h3>0</h3>
                         <p>Friends</p>
                     </div>
                 </div>
+
+                <!-- View Mode -->
+                <section class="profile-info-view" id="profileInfoView">
+                    <div class="profile-item-row">
+                        <span class="profile-item-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open w-4 h-4 text-muted-foreground"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>
+</span>
+                        <p id="viewSchool">{{ school if school else 'Not specified' }}</p>
+                    </div>
+                    <div class="profile-item-row">
+                        <span class="profile-item-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users w-4 h-4 text-muted-foreground"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+                        <p id="viewClass">{{ class_level if class_level else 'Not specified' }}</p>
+                    </div>
+                    <div class="profile-item-row">
+                        <span class="profile-item-icon" aria-hidden="true">💬</span>
+                        <p id="viewBio">{{ bio if bio else 'No bio added' }}</p>
+                    </div>
+                </section>
+
+                <!-- Edit Mode -->
+                {% if session.get('username') %}
+                <section class="profile-info-edit" id="profileInfoEdit" style="display: none;">
+                    <div class="profile-edit-item">
+                        <label for="editSchool">School</label>
+                        <input type="text" id="editSchool" placeholder="e.g. TUES" value="{{ school }}" />
+                    </div>
+                    <div class="profile-edit-item">
+                        <label for="editClass">Class</label>
+                        <input type="text" id="editClass" placeholder="e.g. 8" value="{{ class_level }}" />
+                    </div>
+                    <div class="profile-edit-item">
+                        <label for="editBio">Bio</label>
+                        <textarea id="editBio" placeholder="Tell others about yourself...">{{ bio }}</textarea>
+                    </div>
+                </section>
+                {% endif %}
+                </div>
+
                 <section class="col-1">
                     <div class="col-1-item top_helpers">
-                        <h3> Good at </h3>
-                        <p> No subjects added </p>
+                        <h3 class="card-header">💪 Good at </h3>
+                        <span class="subjects" id="goodAtSubjectsList">
+                            <p class="empty-text">No subjects added</p>
+                        </span>
+                        <div class="profile-tag-editor edit-only">
+                            <div class="tag-input-row">
+                                <input type="text" id="goodAtInput" placeholder="Add subject..." />
+                                <button type="button" id="addGoodAtBtn">+</button>
+                            </div>
+                            <div id="goodAtTagsContainer" class="tag-list"></div>
+                        </div>
                     </div>
                     <div class="col-1-item your_subjects">
-                        <h3 class="card-header"> Need help with </h3>
-                        <span class="subjects">
-                            <p class="subject-item uvod"> Uvod v programiraneto </p>
-                            <p class="subject-item bel"> Bulgarski ezik </p>
-                            <p class="subject-item math"> Matematika </p>
-                            <p class="subject-item geo"> Geografiya i ikonomika </p>
+                        <h3 class="card-header">🙋 Need help with </h3>
+                        <span class="subjects" id="needHelpSubjectsList">
+                            <p class="empty-text">No subjects yet</p>
                         </span>
+                        <div class="profile-tag-editor edit-only">
+                            <div class="tag-input-row">
+                                <input type="text" id="needHelpInput" placeholder="Add subject..." />
+                                <button type="button" id="addNeedHelpBtn">+</button>
+                            </div>
+                            <div id="needHelpTagsContainer" class="tag-list"></div>
+                        </div>
                     </div>
                 </section>
 
                 <div class="ratings-box">
-                    <h3> Your Ratings</h3>
-                    <p class="empty-text">No ratings yet</p>
+                    <h3 id="ratingsBoxHeader">⭐ Your Ratings</h3>
+                    <div id="ratingsBoxList">
+                        <p class="empty-text">No ratings yet</p>
+                    </div>
                 </div>
             </div>
         </section>
